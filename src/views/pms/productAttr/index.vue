@@ -19,7 +19,7 @@
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="类型名称" align="center">
+        <el-table-column label="单位名称" align="center">
           <template slot-scope="scope">{{scope.row.utilName}}</template>
         </el-table-column>
         <el-table-column label="是否显示" width="100" align="center">
