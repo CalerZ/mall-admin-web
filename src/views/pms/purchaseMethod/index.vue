@@ -48,7 +48,7 @@
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="采购方式名称" align="center">
+        <el-table-column label="采购方式名称"  align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
@@ -61,7 +61,7 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="描述" width="100" align="center">
+        <el-table-column label="描述"  align="center">
           <template slot-scope="scope">{{scope.row.discription }}</template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
@@ -127,13 +127,24 @@
       handleUpdate(index, row) {
         this.$router.push({path: '/pms/updatePurchaseMethod', query: {id: row.id}})
       },
-      handleDelete(index, row) {
+      handleDelete() {
+
+        if(this.multipleSelection.length<1){
+          this.$message({
+            message: '请选择采购方式！',
+            type: 'success',
+            duration: 1000
+          });
+          return ;
+        }
+
         this.$confirm('是否要删除该品牌', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deletePurchaseMethod(row.id).then(response => {
+          let ids = this.multipleSelection.map(ps=>ps.id);
+          deletePurchaseMethods(ids).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success',
@@ -143,49 +154,7 @@
           });
         });
       },
-      getProductList(index, row) {
-        console.log(index, row);
-      },
-      getProductCommentList(index, row) {
-        console.log(index, row);
-      },
-      handleFactoryStatusChange(index, row) {
-        var data = new URLSearchParams();
-        data.append("ids", row.id);
-        data.append("factoryStatus", row.factoryStatus);
-        updateFactoryStatus(data).then(response => {
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        }).catch(error => {
-          if (row.factoryStatus === 0) {
-            row.factoryStatus = 1;
-          } else {
-            row.factoryStatus = 0;
-          }
-        });
-      },
-      handleShowStatusChange(index, row) {
-        let data = new URLSearchParams();
-        ;
-        data.append("ids", row.id);
-        data.append("showStatus", row.showStatus);
-        updateShowStatus(data).then(response => {
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        }).catch(error => {
-          if (row.showStatus === 0) {
-            row.showStatus = 1;
-          } else {
-            row.showStatus = 0;
-          }
-        });
-      },
+
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
         this.listQuery.pageSize = val;
@@ -199,48 +168,24 @@
         this.listQuery.pageNum = 1;
         this.getList();
       },
-      handleBatchOperate() {
-        console.log(this.multipleSelection);
-        if (this.multipleSelection < 1) {
-          this.$message({
-            message: '请选择一条记录',
-            type: 'warning',
-            duration: 1000
-          });
-          return;
-        }
-        let showStatus = 0;
-        if (this.operateType === 'showPurchaseMethod') {
-          showStatus = 1;
-        } else if (this.operateType === 'hidePurchaseMethod') {
-          showStatus = 0;
-        } else {
-          this.$message({
-            message: '请选择批量操作类型',
-            type: 'warning',
-            duration: 1000
-          });
-          return;
-        }
-        let ids = [];
-        for (let i = 0; i < this.multipleSelection.length; i++) {
-          ids.push(this.multipleSelection[i].id);
-        }
-        let data = new URLSearchParams();
-        data.append("ids", ids);
-        data.append("showStatus", showStatus);
-        updateShowStatus(data).then(response => {
-          this.getList();
+      addPurchaseMethod() {
+        this.$router.push({path: '/pms/addPurchaseMethod'})
+      },
+      handleShowStatusChange(index, row) {
+        updatePurchaseMethodStatus({"id":row.id,"status":row.status}).then(response => {
           this.$message({
             message: '修改成功',
             type: 'success',
             duration: 1000
           });
+        }).catch(error => {
+          if (row.status === 0) {
+            row.status = 1;
+          } else {
+            row.status = 0;
+          }
         });
       },
-      addPurchaseMethod() {
-        this.$router.push({path: '/pms/addPurchaseMethod'})
-      }
     }
   }
 </script>

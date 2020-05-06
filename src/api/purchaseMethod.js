@@ -3,7 +3,7 @@ export function fetchList(params) {
   return request({
     url:'/purchase/list',
     method:'post',
-    data:params
+    params:params
   })
 }
 export function createPurchaseMethod(data) {

@@ -1,9 +1,9 @@
 import request from '@/utils/request'
-export function fetchList(params) {
+export function fetchList(data) {
   return request({
     url:'/supplier/list',
     method:'post',
-    data:params
+    params:data,
   })
 }
 export function createSupplier(data) {
