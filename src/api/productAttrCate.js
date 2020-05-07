@@ -7,6 +7,8 @@ export function fetchList(params) {
   })
 }
 
+
+
 export function createProductAttrCate(data) {
   return request({
     url:'/productAttribute/category/create',

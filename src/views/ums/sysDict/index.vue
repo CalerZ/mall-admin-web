@@ -1,24 +1,24 @@
 <template> 
   <div class="app-container">
     <el-card class="filter-container" shadow="never">
-        <div>
-          <i class="el-icon-search"></i>
-          <span>筛选搜索</span>
-          <el-button
-            style="float: right"
-            @click="searchSupplierList()"
-            type="primary"
-            size="small">
-            查询结果
-          </el-button>
-        </div>
-        <div style="margin-top: 15px">
-          <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-            <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="供应商名称/编码"></el-input>
-            </el-form-item>
-          </el-form>
-        </div>
+      <div>
+        <i class="el-icon-search"></i>
+        <span>筛选搜索</span>
+        <el-button
+          style="float: right"
+          @click="searchSysDictList()"
+          type="primary"
+          size="small">
+          查询结果
+        </el-button>
+      </div>
+      <div style="margin-top: 15px">
+        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
+          <el-form-item label="输入搜索：">
+            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="供应商名称/编码"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
@@ -32,37 +32,55 @@
       </el-button>
       <el-button
         class="btn-add"
-        @click="addSupplier()"
+        @click="addSysDict()"
         size="mini">
         添加
       </el-button>
     </el-card>
     <div class="table-container">
-      <el-table ref="supplierTable"
+      <el-table ref="sysDictTable"
                 :data="list"
                 style="width: 100%"
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="编号" width="200" align="center">
-          <template slot-scope="scope">{{scope.row.code}}</template>
+        <el-table-column label="ID" width="200" align="center">
+          <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="供应商名称" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+        <el-table-column label="父级" width="200" align="center">
+          <template slot-scope="scope">{{scope.row.pid}}</template>
+        </el-table-column>
+        <el-table-column label="数据类型" align="center">
+          <template slot-scope="scope">{{scope.row.dataType}}</template>
+        </el-table-column>
+        <el-table-column label="数据编码" align="center">
+          <template slot-scope="scope">{{scope.row.dataCode}}</template>
+        </el-table-column>
+        <el-table-column label="数据值" align="center">
+          <template slot-scope="scope">{{scope.row.dataValue}}</template>
+        </el-table-column>
+        <el-table-column label="排序" align="center">
+          <template slot-scope="scope">{{scope.row.sort}}</template>
+        </el-table-column>
+        <el-table-column label="是否固定值" align="center">
+          <template slot-scope="scope">{{scope.row.isFixed}}</template>
+        </el-table-column>
+        <el-table-column label="描述" align="center">
+          <template slot-scope="scope">{{scope.row.dataDesc}}</template>
+        </el-table-column>
+        <el-table-column label="更新时间" align="center">
+          <template slot-scope="scope">{{scope.row.updateIme}}</template>
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
           <template slot-scope="scope">
             <el-switch
-              @change="handleShowStatusChange(scope.$index, scope.row)"
+              @change="handleStatusChange(scope.$index, scope.row)"
               :active-value="1"
               :inactive-value="0"
               v-model="scope.row.status">
             </el-switch>
           </template>
-        </el-table-column>
-        <el-table-column label="描述" width="400" align="center">
-          <template slot-scope="scope">{{scope.row.discription}}</template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
           <template slot-scope="scope">
@@ -89,10 +107,10 @@
   </div>
 </template>
 <script>
-  import {fetchList, createSupplier, updateSupplierStatus, deleteSupplier,deleteSuppliers,getSupplier,updateSupplier,fetchaAllList} from '@/api/supplier'
+  import {fetchList, insert, updateStatus, del, dels, get, update, fetchaAllList} from '@/api/sysDict'
 
   export default {
-    name: 'supplierList',
+    name: 'sysDictList',
     data() {
       return {
         listQuery: {
@@ -124,10 +142,10 @@
         this.multipleSelection = val;
       },
       handleUpdate(index, row) {
-        this.$router.push({path: '/pms/updateSupplier', query: {id: row.id}})
+        this.$router.push({path: '/ums/updateSysDict', query: {id: row.id}})
       },
       handleDelete() {
-        if(this.multipleSelection.length<1){
+        if (this.multipleSelection.length < 1) {
           this.$message({
             message: '未选择供应商！',
             type: 'warning',
@@ -140,8 +158,8 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let ids = this.multipleSelection.map(supplier=>supplier.id);
-          deleteSuppliers(ids).then(response => {
+          let ids = this.multipleSelection.map(sysDict => sysDict.id);
+          deleteSysDicts(ids).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success',
@@ -151,32 +169,8 @@
           });
         });
       },
-      getProductList(index, row) {
-        console.log(index, row);
-      },
-      getProductCommentList(index, row) {
-        console.log(index, row);
-      },
-      handleFactoryStatusChange(index, row) {
-        var data = new URLSearchParams();
-        data.append("ids", row.id);
-        data.append("factoryStatus", row.factoryStatus);
-        updateFactoryStatus(data).then(response => {
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        }).catch(error => {
-          if (row.factoryStatus === 0) {
-            row.factoryStatus = 1;
-          } else {
-            row.factoryStatus = 0;
-          }
-        });
-      },
-      handleShowStatusChange(index, row) {
-        updateSupplierStatus({"id":row.id,"status":row.status}).then(response => {
+      handleStatusChange(index, row) {
+        updateStatus({"id": row.id, "status": row.status}).then(response => {
           this.$message({
             message: '修改成功',
             type: 'success',
@@ -199,12 +193,12 @@
         this.listQuery.pageNum = val;
         this.getList();
       },
-      searchSupplierList() {
+      searchSysDictList() {
         this.listQuery.pageNum = 1;
         this.getList();
       },
-      addSupplier() {
-        this.$router.push({path: '/pms/addSupplier'})
+      addSysDict() {
+        this.$router.push({path: '/ums/addSysDict'})
       }
     }
   }

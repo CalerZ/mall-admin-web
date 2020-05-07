@@ -23,6 +23,21 @@ export function updateDeleteStatus(params) {
   })
 }
 
+export function  deleteProducts(ids){
+  return request({
+    url:'/product/delete',
+    method:'delete',
+    data:ids
+  })
+}
+export function  deleteProduct(id){
+  return request({
+    url:'/product/delete/'+id,
+    method:'post',
+  })
+}
+
+
 export function updateNewStatus(params) {
   return request({
     url:'/product/update/newStatus',
@@ -57,8 +72,8 @@ export function createProduct(data) {
 
 export function updateProduct(id,data) {
   return request({
-    url:'/product/update/'+id,
-    method:'post',
+    url:'/product/update',
+    method:'put',
     data:data
   })
 }

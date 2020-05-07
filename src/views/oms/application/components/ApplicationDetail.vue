@@ -143,7 +143,7 @@
                 message: '提交成功',
                 duration: 1000
               });
-              this.$router.push("/oms/applicationFormList")
+              this.$router.push("/apply/applicationFormList")
               this.productParam = Object.assign({}, defaultProductParam)
             });
           }
@@ -172,8 +172,9 @@
                 message: '保存成功',
                 duration: 1000
               });
+
               this.productParam = Object.assign({}, defaultProductParam)
-              this.$router.push("/oms/applicationFormList")
+              this.$router.push("/apply/applicationFormList")
             });
           }
         })

@@ -53,6 +53,7 @@
   import getters from "../../../../store/getters";
   import {getCompany} from '@/api/company';
   import {fetchAllList as getAllMember} from '@/api/login';
+  import {formNo } from '@/api/application';
   let than;
   export default {
     name: "ApplicationInfoDetail",
@@ -81,10 +82,11 @@
     },
     created() {
       this.getAllUser();
-      this.computeFormCode();
+      // this.computeFormCode();
       this.value.applicationForm.applyOn = this.$store.getters.userid;
       this.value.applicationForm.applyCompany = this.$store.getters.company.id;
-      console.log(this.$store.getters)
+
+      this.getFormNo();
     },
     filters:{
       userNameFilter(id){
@@ -100,10 +102,14 @@
       },
     },
     methods: {
+      getFormNo(){
+        formNo().then(response=>{
+          this.value.applicationForm.formCode  = response.data;
+        })
+      },
       //后台生成流水号
       computeFormCode(){
         let date = new Date();
-        console.log(date.toLocaleString())
         this.value.applicationForm.formCode =  'TAP-'+date.getFullYear()+date.getMonth()+'-'+'0001';
       },
 
