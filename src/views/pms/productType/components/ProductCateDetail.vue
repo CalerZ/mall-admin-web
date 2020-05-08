@@ -19,8 +19,8 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="排序：">
-        <el-input v-model="productCate.sort"></el-input>
+      <el-form-item label="排序：" prop="sort">
+        <el-input v-model.number="productCate.sort"></el-input>
       </el-form-item>
       <el-form-item label="是否显示：">
         <el-radio-group v-model="productCate.status">
@@ -34,10 +34,6 @@
                   :rows="5"
                   style="width: 60%"></el-input>
       </el-form-item>
-      <!--      <el-form-item label="分类图标：">-->
-      <!--        <single-upload v-model="productCate.icon"></single-upload>-->
-      <!--      </el-form-item>-->
-
       <el-form-item>
         <el-button type="primary" @click="onSubmit('productCateFrom')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('productCateFrom')">重置</el-button>
@@ -47,7 +43,7 @@
 </template>
 
 <script>
-  import {fetchList, createProductCate, updateProductCate, getProductCate} from '@/api/productCate';
+  import {fetchList, createProductCate, updateProductCate, getProductCate} from '@/api/productType';
   import {fetchListWithAttr} from '@/api/productAttrCate';
   import SingleUpload from '@/components/Upload/singleUpload';
 
@@ -76,6 +72,9 @@
           typeName: [
             {required: true, message: '请输入品牌名称', trigger: 'blur'},
             {min: 0, max: 140, message: '长度在 0 到 140 个字符', trigger: 'blur'}
+          ],
+          sort: [
+            {type:'number', message: '排序必须为整数', trigger: 'blur'}
           ]
         },
         filterAttrs: [],

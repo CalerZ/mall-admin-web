@@ -1,20 +1,28 @@
 import request from '@/utils/request'
-export function fetchList(cid,params) {
+export function fetchList(params) {
   return request({
     url:'/putil/list',
     method:'post',
-    data:params
+    params:params
   })
 }
 
-export function deleteProductAttr(data) {
+export function deleteUtil(data) {
   return request({
     url:'/putil/delete/'+data,
     method:'post',
   })
 }
 
-export function createProductAttr(data) {
+export function deleteUtils(data) {
+  return request({
+    url:'/putil/delete',
+    method:'post',
+    data:data
+  })
+}
+
+export function createUtil(data) {
   return request({
     url:'/putil/insert',
     method:'post',
@@ -22,26 +30,27 @@ export function createProductAttr(data) {
   })
 }
 
-export function updateProductAttr(id,data) {
+export function updateUtil(id,data) {
   return request({
     url:'/putil/update',
     method:'post',
     data:data
   })
 }
-export function getProductAttr(id) {
+export function updateUtilStatus(data) {
+  return request({
+    url:'/putil/update',
+    method:'post',
+    data:data
+  })
+}
+export function getUtil(id) {
   return request({
     url:'/putil/'+id,
     method:'get'
   })
 }
 
-export function getProductAttrInfo(productCategoryId) {
-  return request({
-    url:'/putil/attrInfo/'+productCategoryId,
-    method:'get'
-  })
-}
 export function fetchAllList() {
   return request({
     url:'/putil/list',

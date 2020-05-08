@@ -7,12 +7,27 @@ export function fetchList(cid,params) {
   })
 }
 
+
+export function updateShowStatus(data) {
+  return request({
+    url:'/putil/update',
+    method:'post',
+  })
+}
 export function deleteProductAttr(data) {
   return request({
     url:'/putil/delete/'+data,
     method:'post',
   })
 }
+export function deleteProductAttrs(data) {
+  return request({
+    url:'/putil/delete',
+    method:'post',
+    data:data
+  })
+}
+
 
 export function createProductAttr(data) {
   return request({

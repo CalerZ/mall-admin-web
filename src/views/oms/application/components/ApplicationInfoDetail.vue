@@ -48,7 +48,6 @@
   </div>
 </template>
 <script>
-  import {fetchTreeList} from '@/api/productCate';
   import Tinymce from '@/components/Tinymce'
   import getters from "../../../../store/getters";
   import {getCompany} from '@/api/company';

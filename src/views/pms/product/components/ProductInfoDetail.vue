@@ -12,7 +12,7 @@
     </div>
 </template>
 <script>
-    import {fetchTreeList} from '@/api/productCate';
+    import {fetchTreeList} from '@/api/productType';
     export default {
         name: "ProductInfoDetail",
         props: {

@@ -86,22 +86,25 @@
         <el-table-column fixed label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.code}}</template>
         </el-table-column>
-        <el-table-column fixed label="商品名称" width="150" align="center">
+        <el-table-column fixed label="物品名称" width="150" align="center">
           <template slot-scope="scope">
             <p>{{scope.row.name}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="类型" align="center">
+        <el-table-column label="类型" align="center"  width="200">
           <template slot-scope="scope">
-            {{scope.row.type1}} {{scope.row.type2}}
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+              <el-breadcrumb-item>{{scope.row.type1Name }}</el-breadcrumb-item>
+              <el-breadcrumb-item>{{scope.row.type2Name }}</el-breadcrumb-item>
+            </el-breadcrumb>
           </template>
         </el-table-column>
-        <el-table-column label="规格" width="150" align="center">
+        <el-table-column label="规格" width="230" align="center">
           <template slot-scope="scope">
             {{scope.row.specifications}}
           </template>
         </el-table-column>
-        <el-table-column label="标准" width="150" align="center">
+        <el-table-column label="标准" width="230" align="center">
           <template slot-scope="scope">
             {{scope.row.standard}}
           </template>
@@ -113,7 +116,7 @@
         </el-table-column>
         <el-table-column label="单位" width="120" align="center">
           <template slot-scope="scope">
-            {{scope.row.unit}}
+            {{scope.row.utilName}}
           </template>
         </el-table-column>
         <el-table-column label="时间" width="153" align="center">
@@ -123,7 +126,7 @@
         </el-table-column>
         <el-table-column label="创建人" width="120" align="center">
           <template slot-scope="scope">
-            <p>{{scope.row.createOn }}</p>
+            <p>{{scope.row.createrName  }}</p>
           </template>
         </el-table-column>
         <el-table-column label="供应商" width="120" align="center">
@@ -181,12 +184,9 @@
     updatePublishStatus,
     deleteProducts,
   } from '@/api/product'
-  import {fetchList as fetchSkuStockList, update as updateSkuStockList} from '@/api/skuStock'
-  import {fetchList as fetchProductAttrList} from '@/api/productAttr'
-  import {fetchAllList as fetchTypeList} from '@/api/productCate'
-  import {fetchListWithChildren} from '@/api/productCate'
+  import {fetchAllList as fetchTypeList} from '@/api/productType'
   import {fetchAllList as getAllMember} from '@/api/login';
-
+  let than;
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
@@ -204,6 +204,7 @@
       }
     },
     data() {
+      than = this;
       return {
         editSkuInfo: {
           dialogVisible: false,
@@ -260,13 +261,18 @@
         } else {
           return '未审核';
         }
+      },
+      filterUserName(id){
+        let userName = "";
+        than.userList.forEach(item=>{
+          if(item.id==id){
+            userName = item.username;
+          }
+        })
+        return userName;
       }
     },
     methods: {
-
-   /*   handleChange(val) {
-        console.log(val);
-      },*/
       getAllUser() {
         getAllMember().then(response => {
           this.userList = response.data;
@@ -279,14 +285,6 @@
         })
       },
 
-      getProductSkuSp(row, index) {
-        let spData = JSON.parse(row.spData);
-        if (spData != null && index < spData.length) {
-          return spData[index].value;
-        } else {
-          return null;
-        }
-      },
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
@@ -295,136 +293,12 @@
           this.total = response.data.total;
         });
       },
-      getBrandList() {
-        fetchBrandList({pageNum: 1, pageSize: 100}).then(response => {
-          this.brandOptions = [];
-          let brandList = response.data.list;
-          for (let i = 0; i < brandList.length; i++) {
-            this.brandOptions.push({label: brandList[i].name, value: brandList[i].id});
-          }
-        });
-      },
-      getProductCateList() {
-        fetchListWithChildren().then(response => {
-          let list = response.data;
-          this.productCateOptions = [];
-          for (let i = 0; i < list.length; i++) {
-            let children = [];
-            if (list[i].children != null && list[i].children.length > 0) {
-              for (let j = 0; j < list[i].children.length; j++) {
-                children.push({label: list[i].children[j].name, value: list[i].children[j].id});
-              }
-            }
-            this.productCateOptions.push({label: list[i].name, value: list[i].id, children: children});
-          }
-        });
-      },
-      handleShowSkuEditDialog(index, row) {
-        this.editSkuInfo.dialogVisible = true;
-        this.editSkuInfo.productId = row.id;
-        this.editSkuInfo.productSn = row.productSn;
-        this.editSkuInfo.productAttributeCategoryId = row.productAttributeCategoryId;
-        this.editSkuInfo.keyword = null;
-        fetchSkuStockList(row.id, {keyword: this.editSkuInfo.keyword}).then(response => {
-          this.editSkuInfo.stockList = response.data;
-        });
-        if (row.productAttributeCategoryId != null) {
-          fetchProductAttrList(row.productAttributeCategoryId, {type: 0}).then(response => {
-            this.editSkuInfo.productAttr = response.data.list;
-          });
-        }
-      },
-      handleSearchEditSku() {
-        fetchSkuStockList(this.editSkuInfo.productId, {keyword: this.editSkuInfo.keyword}).then(response => {
-          this.editSkuInfo.stockList = response.data;
-        });
-      },
-      handleEditSkuConfirm() {
-        if (this.editSkuInfo.stockList == null || this.editSkuInfo.stockList.length <= 0) {
-          this.$message({
-            message: '暂无sku信息',
-            type: 'warning',
-            duration: 1000
-          });
-          return
-        }
-        this.$confirm('是否要进行修改', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          updateSkuStockList(this.editSkuInfo.productId, this.editSkuInfo.stockList).then(response => {
-            this.$message({
-              message: '修改成功',
-              type: 'success',
-              duration: 1000
-            });
-            this.editSkuInfo.dialogVisible = false;
-          });
-        });
-      },
       handleSearchList() {
         this.listQuery.pageNum = 1;
         this.getList();
       },
       handleAddProduct() {
         this.$router.push({path: '/pms/addProduct'});
-      },
-      handleBatchOperate() {
-        if (this.operateType == null) {
-          this.$message({
-            message: '请选择操作类型',
-            type: 'warning',
-            duration: 1000
-          });
-          return;
-        }
-        if (this.multipleSelection == null || this.multipleSelection.length < 1) {
-          this.$message({
-            message: '请选择要操作的商品',
-            type: 'warning',
-            duration: 1000
-          });
-          return;
-        }
-        this.$confirm('是否要进行该批量操作?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let ids = [];
-          for (let i = 0; i < this.multipleSelection.length; i++) {
-            ids.push(this.multipleSelection[i].id);
-          }
-          switch (this.operateType) {
-            case this.operates[0].value:
-              this.updatePublishStatus(1, ids);
-              break;
-            case this.operates[1].value:
-              this.updatePublishStatus(0, ids);
-              break;
-            case this.operates[2].value:
-              this.updateRecommendStatus(1, ids);
-              break;
-            case this.operates[3].value:
-              this.updateRecommendStatus(0, ids);
-              break;
-            case this.operates[4].value:
-              this.updateNewStatus(1, ids);
-              break;
-            case this.operates[5].value:
-              this.updateNewStatus(0, ids);
-              break;
-            case this.operates[6].value:
-              break;
-            case this.operates[7].value:
-              this.updateDeleteStatus(1, ids);
-              break;
-            default:
-              break;
-          }
-          this.getList();
-        });
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;

@@ -5,6 +5,12 @@
       <span style="margin-top: 5px">数据列表</span>
       <el-button
         class="btn-add"
+        size="mini"
+        type="danger"
+        @click="handleDelete()">删除
+      </el-button>
+      <el-button
+        class="btn-add"
         @click="handleAddProductCate()"
         size="mini">
         添加
@@ -14,7 +20,9 @@
       <el-table ref="productCateTable"
                 style="width: 100%"
                 :data="list"
+                @selection-change="handleSelectionChange"
                 v-loading="listLoading" border>
+        <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
@@ -56,11 +64,7 @@
               size="mini"
               @click="handleUpdate(scope.$index, scope.row)">编辑
             </el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
+
           </template>
         </el-table-column>
       </el-table>
@@ -81,10 +85,10 @@
 </template>
 
 <script>
-  import {fetchList,deleteProductCate,updateShowStatus,updateNavStatus} from '@/api/productCate'
+  import {fetchList,deleteProductCate,deleteProductCates,updateShowStatus,updateNavStatus} from '@/api/productType'
 
   export default {
-    name: "productCateList",
+    name: "productTypeList",
     data() {
       return {
         list: null,
@@ -94,7 +98,8 @@
           pageNum: 1,
           pageSize: 5
         },
-        parentId: 0
+        parentId: 0,
+        multipleSelection:[]
       }
     },
     created() {
@@ -108,6 +113,9 @@
       }
     },
     methods: {
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
       resetParentId(){
         this.listQuery.pageNum = 1;
         if (this.$route.query.parentId != null) {
@@ -117,7 +125,7 @@
         }
       },
       handleAddProductCate() {
-        this.$router.push('/pms/addProductCate');
+        this.$router.push('/pms/addProductType');
       },
       getList() {
         this.listLoading = true;
@@ -151,12 +159,8 @@
         });
       },
       handleShowStatusChange(index, row) {
-        let data = new URLSearchParams();
-        let ids=[];
-        ids.push(row.id)
-        data.append('ids',ids);
-        data.append('showStatus',row.showStatus);
-        updateShowStatus(data).then(response=>{
+
+        updateShowStatus({id:row.id,status:row.status}).then(response=>{
           this.$message({
             message: '修改成功',
             type: 'success',
@@ -165,21 +169,31 @@
         });
       },
       handleShowNextLevel(index, row) {
-        this.$router.push({path: '/pms/productCate', query: {parentId: row.id}})
+        this.$router.push({path: '/pms/productTypeList', query: {parentId: row.id}})
       },
       handleTransferProduct(index, row) {
         console.log('handleAddProductCate');
       },
       handleUpdate(index, row) {
-        this.$router.push({path:'/pms/updateProductCate',query:{id:row.id}});
+        this.$router.push({path:'/pms/updateProductType',query:{id:row.id}});
       },
       handleDelete(index, row) {
-        this.$confirm('是否要删除该品牌', '提示', {
+
+        if (this.multipleSelection.length < 1) {
+          this.$message({
+            message: '未选择分类！',
+            type: 'warning',
+            duration: 1000
+          });
+          return;
+        }
+        this.$confirm('是否要删除该分类', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteProductCate(row.id).then(response => {
+          let ids = this.multipleSelection.map(supplier => supplier.id);
+          deleteProductCates(ids).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success',

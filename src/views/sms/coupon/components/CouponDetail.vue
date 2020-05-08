@@ -142,7 +142,7 @@
 <script>
   import {createCoupon,getCoupon,updateCoupon} from '@/api/coupon';
   import {fetchSimpleList as fetchProductList} from '@/api/product';
-  import {fetchListWithChildren} from '@/api/productCate'
+  import {fetchListWithChildren} from '@/api/productType'
   const defaultCoupon = {
     type: 0,
     name: null,

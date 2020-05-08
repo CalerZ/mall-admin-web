@@ -14,18 +14,6 @@
       <el-form-item label="本月提报数量：" prop="stock.reportedQuantity">
         <el-input v-model.number="value.stock.reportedQuantity"></el-input>
       </el-form-item>
-<!--      <el-form-item label="采购方式：" prop="stock.purchaseMethod">-->
-<!--        <el-select-->
-<!--          v-model="value.stock.purchaseMethod"-->
-<!--          placeholder="请选择采购方式">-->
-<!--          <el-option-->
-<!--            v-for="item in purchaseMethodList"-->
-<!--            :key="item.id"-->
-<!--            :label="item.name"-->
-<!--            :value="item.id">-->
-<!--          </el-option>-->
-<!--        </el-select>-->
-<!--      </el-form-item>-->
       <el-form-item label="生产线人数：" prop="stock.prodLineMembers">
         <el-input v-model.number="value.stock.prodLineMembers"></el-input>
       </el-form-item>

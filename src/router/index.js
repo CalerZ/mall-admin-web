@@ -46,7 +46,7 @@ export const asyncRouterMap = [
       name: 'product',
       component: () => import('@/views/pms/product/index'),
       meta: {title: '物品列表', icon: 'product-list'}
-    },
+      },
       {
         path: 'addProduct',
         name: 'addProduct',
@@ -60,43 +60,33 @@ export const asyncRouterMap = [
         meta: {title: '修改物品', icon: 'product-add'},
         hidden: true
       },
+
+      //物品类型
       {
-        path: 'productCate',
-        name: 'productCate',
-        component: () => import('@/views/pms/productCate/index'),
+        path: 'productTypeList',
+        name: 'productTypeList',
+        component: () => import('@/views/pms/productType/index'),
         meta: {title: '物品分类', icon: 'product-cate'}
       },
       {
-        path: 'addProductCate',
-        name: 'addProductCate',
-        component: () => import('@/views/pms/productCate/add'),
+        path: 'addProductType',
+        name: 'addProductType',
+        component: () => import('@/views/pms/productType/add'),
         meta: {title: '添加商品分类'},
         hidden: true
       },
       {
-        path: 'updateProductCate',
-        name: 'updateProductCate',
-        component: () => import('@/views/pms/productCate/update'),
+        path: 'updateProductType',
+        name: 'updateProductType',
+        component: () => import('@/views/pms/productType/update'),
         meta: {title: '修改商品分类'},
         hidden: true
       },
+
+      //单位
       {
-        path: 'productAttr',
-        name: 'productAttr',
-        component: () => import('@/views/pms/productAttr/index'),
-        meta: {title: '物品单位', icon: 'product-attr'},
-        hidden: true
-      },
-      {
-        path: 'productAttrList',
-        name: 'productAttrList',
-        component: () => import('@/views/pms/productAttr/productAttrList'),
-        meta: {title: '物品单位列表'},
-        hidden: true
-      },
-      {
-        path: 'productUtil',
-        name: 'productUtil',
+        path: 'productUtilList',
+        name: 'productUtilList',
         component: () => import('@/views/pms/productUtil/index'),
         meta: {title: '物品单位', icon: 'product-attr'}
       },
@@ -114,20 +104,8 @@ export const asyncRouterMap = [
         meta: {title: '修改物品单位'},
         hidden: true
       },
-      {
-        path: 'addProductAttr',
-        name: 'addProductAttr',
-        component: () => import('@/views/pms/productAttr/addProductAttr'),
-        meta: {title: '添加物品单位'},
-        hidden: true
-      },
-      {
-        path: 'updateProductAttr',
-        name: 'updateProductAttr',
-        component: () => import('@/views/pms/productAttr/updateProductAttr'),
-        meta: {title: '修改物品单位'},
-        hidden: true
-      },
+
+      //供应商
       {
         path: 'supplierList',
         name: 'supplierList',
@@ -139,7 +117,7 @@ export const asyncRouterMap = [
         name: 'addSupplier',
         component: () => import('@/views/pms/supplier/add'),
         meta: {title: '添加供应商'},
-        hidden:true
+        hidden: true
 
       },
       {
@@ -147,21 +125,22 @@ export const asyncRouterMap = [
         name: 'updateSupplier',
         component: () => import('@/views/pms/supplier/update'),
         meta: {title: '修改供应商'},
-        hidden:true
+        hidden: true
 
       },
+      //采购方式
       {
         path: 'purchaseMethodList',
         name: 'purchaseMethodList',
         component: () => import('@/views/pms/purchaseMethod/index'),
-        meta: {title: '采购方式管理',icon: 'product-brand'}
+        meta: {title: '采购方式管理', icon: 'product-brand'}
       },
       {
         path: 'addPurchaseMethod',
         name: 'addPurchaseMethod',
         component: () => import('@/views/pms/purchaseMethod/add'),
         meta: {title: '添加采购方式'},
-        hidden:true
+        hidden: true
 
       },
       {
@@ -169,23 +148,10 @@ export const asyncRouterMap = [
         name: 'updatePurchaseMethod',
         component: () => import('@/views/pms/purchaseMethod/update'),
         meta: {title: '修改采购方式'},
-        hidden:true
+        hidden: true
 
       },
-      {
-        path: 'addBrand',
-        name: 'addBrand',
-        component: () => import('@/views/pms/brand/add'),
-        meta: {title: '添加品牌'},
-        hidden: true
-      },
-      {
-        path: 'updateBrand',
-        name: 'updateBrand',
-        component: () => import('@/views/pms/brand/update'),
-        meta: {title: '编辑品牌'},
-        hidden: true
-      }
+
     ]
   },
   {
@@ -199,14 +165,14 @@ export const asyncRouterMap = [
         path: 'addApplication',
         name: 'addApplication',
         component: () => import('@/views/oms/application/add'),
-        meta: {title: '物品申请单',icon: 'product-add'},
+        meta: {title: '物品申请单', icon: 'product-add'},
       },
       {
         path: 'productViewList',
         name: 'productViewList',
         component: () => import('@/views/oms/application/productViewList'),
         meta: {title: '物品查看列表'},
-        hidden:true
+        hidden: true
       },
       {
         path: 'applicationFormList',
@@ -219,7 +185,7 @@ export const asyncRouterMap = [
         name: 'updateApplication',
         component: () => import('@/views/oms/application/update'),
         meta: {title: '更新申请单'},
-        hidden:true
+        hidden: true
       },
       {
         path: 'reviewedApplicationFormList',
@@ -238,12 +204,12 @@ export const asyncRouterMap = [
         name: 'orderDetail',
         component: () => import('@/views/oms/order/orderDetail'),
         meta: {title: '订单详情'},
-        hidden:true
+        hidden: true
       },
     ]
   },
   {
-    path:'/info',
+    path: '/info',
     component: Layout,
     redirect: '/info/export',
     name: 'info',
@@ -267,108 +233,11 @@ export const asyncRouterMap = [
         component: () => import('@/views/sms/flash/index'),
         meta: {title: '申请单导入', icon: 'sms-flash'}
       },
-      {
-        path: 'flashSession',
-        name: 'flashSession',
-        component: () => import('@/views/sms/flash/sessionList'),
-        meta: {title: '秒杀时间段列表'},
-        hidden:true
-      },
-      {
-        path: 'selectSession',
-        name: 'selectSession',
-        component: () => import('@/views/sms/flash/selectSessionList'),
-        meta: {title: '秒杀时间段选择'},
-        hidden:true
-      },
-      {
-        path: 'flashProductRelation',
-        name: 'flashProductRelation',
-        component: () => import('@/views/sms/flash/productRelationList'),
-        meta: {title: '秒杀商品列表'},
-        hidden:true
-      },
-      {
-        path: 'coupon',
-        name: 'coupon',
-        component: () => import('@/views/sms/coupon/index'),
-        meta: {title: '优惠券列表', icon: 'sms-coupon'},
-        hidden:true
-      },
-      {
-        path: 'addCoupon',
-        name: 'addCoupon',
-        component: () => import('@/views/sms/coupon/add'),
-        meta: {title: '添加优惠券'},
-        hidden:true
-      },
-      {
-        path: 'updateCoupon',
-        name: 'updateCoupon',
-        component: () => import('@/views/sms/coupon/update'),
-        meta: {title: '修改优惠券'},
-        hidden:true
-      },
-      {
-        path: 'couponHistory',
-        name: 'couponHistory',
-        component: () => import('@/views/sms/coupon/history'),
-        meta: {title: '优惠券领取详情'},
-        hidden:true
-      },
-      {
-        path: 'brand',
-        name: 'homeBrand',
-        component: () => import('@/views/sms/brand/index'),
-        meta: {title: '品牌推荐', icon: 'product-brand'},
-        hidden:true
-      },
-      {
-        path: 'new',
-        name: 'homeNew',
-        component: () => import('@/views/sms/new/index'),
-        meta: {title: '新品推荐', icon: 'sms-new'},
-        hidden:true
-      },
-      {
-        path: 'hot',
-        name: 'homeHot',
-        component: () => import('@/views/sms/hot/index'),
-        meta: {title: '人气推荐', icon: 'sms-hot'},
-        hidden:true
-      },
-      {
-        path: 'subject',
-        name: 'homeSubject',
-        component: () => import('@/views/sms/subject/index'),
-        meta: {title: '专题推荐', icon: 'sms-subject'},
-        hidden:true
-      },
-      {
-        path: 'advertise',
-        name: 'homeAdvertise',
-        component: () => import('@/views/sms/advertise/index'),
-        meta: {title: '广告列表', icon: 'sms-ad'},
-        hidden:true
-      },
-      {
-        path: 'addAdvertise',
-        name: 'addHomeAdvertise',
-        component: () => import('@/views/sms/advertise/add'),
-        meta: {title: '添加广告'},
-        hidden:true
-      },
-      {
-        path: 'updateAdvertise',
-        name: 'updateHomeAdvertise',
-        component: () => import('@/views/sms/advertise/update'),
-        meta: {title: '编辑广告'},
-        hidden:true
-      }
+
     ]
   },
   {
-    path:'/ums',
+    path: '/ums',
     component: Layout,
     redirect: '/ums/admin',
     name: 'ums',
@@ -385,7 +254,8 @@ export const asyncRouterMap = [
         path: 'adduser',
         name: 'adduser',
         component: () => import('@/views/ums/admin/adduser'),
-        meta: {title: '添加用户', icon: 'ums-admin'}
+        meta: {title: '添加用户', icon: 'ums-admin'},
+        hidden: true
       },
       {
         path: 'role',
@@ -446,8 +316,6 @@ export const asyncRouterMap = [
         meta: {title: '资源分类'},
         hidden: true
       },
-
-
       {
         path: 'sysDictList',
         name: 'sysDictList',
@@ -471,7 +339,7 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path:'/sys',
+    path: '/sys',
     component: Layout,
     redirect: '/sys/apidoc',
     name: 'sys',
@@ -502,48 +370,6 @@ export const asyncRouterMap = [
         component: () => import('@/views/ums/role/allocResource'),
         meta: {title: '系统监控'},
       },
-      {
-        path: 'menu',
-        name: 'menu',
-        component: () => import('@/views/ums/menu/index'),
-        meta: {title: '菜单列表', icon: 'ums-menu'},
-        hidden: true
-      },
-      {
-        path: 'addMenu',
-        name: 'addMenu',
-        component: () => import('@/views/ums/menu/add'),
-        meta: {title: '添加菜单'},
-        hidden: true
-      },
-      {
-        path: 'updateMenu',
-        name: 'updateMenu',
-        component: () => import('@/views/ums/menu/update'),
-        meta: {title: '修改菜单'},
-        hidden: true
-      },
-      {
-        path: 'resource',
-        name: 'resource',
-        component: () => import('@/views/ums/resource/index'),
-        meta: {title: '资源列表', icon: 'ums-resource'},
-        hidden: true
-      },
-      {
-        path: 'company',
-        name: 'company',
-        component: () => import('@/views/ums/company/index'),
-        meta: {title: '公司列表', icon: 'ums-admin'},
-        hidden: true
-      },
-      {
-        path: 'resourceCategory',
-        name: 'resourceCategory',
-        component: () => import('@/views/ums/resource/categoryList'),
-        meta: {title: '资源分类'},
-        hidden: true
-      }
     ]
   },
   {path: '*', redirect: '/404', hidden: true}

@@ -137,8 +137,8 @@
 
 <script>
 
-  import {fetchAllList as fetchProductUtilList} from '@/api/productUtil'
-  import {fetchAllList as fetchProductTypeList} from '@/api/productCate'
+  import {fetchAllList as fetchProductUtilList} from '@/api/util'
+  import {fetchAllList as fetchProductTypeList} from '@/api/productType'
   import {getApplicationProductList} from '@/api/product'
 
 
