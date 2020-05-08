@@ -99,5 +99,10 @@ export function getReviewedApplicationList(data) {
     data:data
   })
 }
-
+export function formNo(){
+  return request({
+    url:'/application/applyFormNo',
+    method:'post',
+  })
+}
 

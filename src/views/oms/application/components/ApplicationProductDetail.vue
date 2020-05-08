@@ -333,8 +333,6 @@
           this.unitOptions = response.data;
         });
       },
-
-
       handleEditCreated() {
         //根据商品属性分类id获取属性和参数
         if (this.value.productAttributeCategoryId != null) {
@@ -343,35 +341,12 @@
         this.hasEditCreated = true;
       },
 
-      //单元格点击后，显示input，并让input 获取焦点
-      handleCellClick: function (row, column, cell, event) {
-        emptransfer.addClass(cell, 'current-cell');
-        if (emptransfer.getChildElement(cell, 3) !== 0) {
-          var _inputParentNode = emptransfer.getChildElement(cell, 3);
-          if (_inputParentNode.hasChildNodes() && _inputParentNode.childNodes.length > 2) {
-            var _inputNode = _inputParentNode.childNodes[2];
-            if (_inputNode.tagName === 'INPUT') {
-              _inputNode.focus();
-            }
-          }
-        }
-      },
-      //input框失去焦点事件
-      handleInputBlur: function (event) {   //当 input 失去焦点 时,input 切换为 span，并且让下方 表格消失（注意，与点击表格事件的执行顺序）
-        var _event = event;
-        setTimeout(function () {
-          var _inputNode = _event.target;
-          if (emptransfer.getParentElement(_inputNode, 4) !== 0) {
-            var _cellNode = emptransfer.getParentElement(_inputNode, 4);
-            emptransfer.removeClass(_cellNode, 'current-cell');
-            emptransfer.removeClass(_cellNode, 'current-cell2');
-          }
-        }, 200);
-      },
-
       handlePrev() {
         this.$emit('prevStep')
       },
+      resetForm(formName){
+        this.$refs[formName].resetFields();
+      }
     }
   }
 </script>

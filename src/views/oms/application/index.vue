@@ -60,7 +60,7 @@
       </el-button>
       <el-button
         class="btn-add"
-        @click="handleAddProduct()"
+        @click="handleSubmit()"
         size="mini">
         提交申请
       </el-button>
@@ -218,8 +218,6 @@
     },
     created() {
       this.getList();
-      // this.getBrandList();
-      // this.getProductCateList();
     },
     watch: {
       selectProductCateValue: function (newValue) {
@@ -241,6 +239,10 @@
       }
     },
     methods: {
+
+      handleSubmit(){
+
+      },
       getProductSkuSp(row, index) {
         let spData = JSON.parse(row.spData);
         if(spData!=null&&index<spData.length){
@@ -330,7 +332,7 @@
         this.getList();
       },
       handleAddApplication() {
-        this.$router.push({path:'/oms/addApplication'});
+        this.$router.push({path:'/apply/addApplication'});
       },
       handleBatchOperate() {
         if(this.operateType==null){

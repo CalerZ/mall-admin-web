@@ -245,19 +245,19 @@ export const asyncRouterMap = [
   {
     path:'/info',
     component: Layout,
-    redirect: '/info/coupon',
+    redirect: '/info/export',
     name: 'info',
     meta: {title: '信息', icon: 'sms'},
     children: [
       {
-        path: 'flash',
-        name: 'flash',
-        component: () => import('@/views/sms/flash/index'),
+        path: 'export',
+        name: 'export',
+        component: () => import('@/views/sms/export/index'),
         meta: {title: '物品信息导出', icon: 'sms-flash'}
       },
       {
-        path: 'flash',
-        name: 'flash',
+        path: 'import',
+        name: 'import',
         component: () => import('@/views/sms/flash/index'),
         meta: {title: '导入物品信息', icon: 'sms-flash'}
       },
@@ -444,6 +444,28 @@ export const asyncRouterMap = [
         name: 'resourceCategory',
         component: () => import('@/views/ums/resource/categoryList'),
         meta: {title: '资源分类'},
+        hidden: true
+      },
+
+
+      {
+        path: 'sysDictList',
+        name: 'sysDictList',
+        component: () => import('@/views/ums/sysDict/index'),
+        meta: {title: '字典列表'},
+      },
+      {
+        path: 'addSysDict',
+        name: 'addSysDict',
+        component: () => import('@/views/ums/sysDict/add'),
+        meta: {title: '添加'},
+        hidden: true
+      },
+      {
+        path: 'updateSysDict',
+        name: 'updateSysDict',
+        component: () => import('@/views/ums/sysDict/update'),
+        meta: {title: '修改'},
         hidden: true
       }
     ]
