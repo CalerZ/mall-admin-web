@@ -281,9 +281,10 @@
         this.getList();
       },
       handleAdd() {
-        this.dialogVisible = true;
-        this.isEdit = false;
-        this.admin = Object.assign({}, defaultAdmin);
+        this.$router.push({path: '/ums/adduser'})
+       // this.dialogVisible = true;
+        //this.isEdit = false;
+        //this.admin = Object.assign({}, defaultAdmin);
       },
       handleStatusChange(index, row) {
         this.$confirm('是否要修改该状态?', '提示', {
