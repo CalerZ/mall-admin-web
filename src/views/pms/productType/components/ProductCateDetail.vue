@@ -18,7 +18,9 @@
           </el-option>
         </el-select>
       </el-form-item>
-
+      <el-form-item label="编号：" prop="code">
+        <el-input v-model="productCate.code"></el-input>
+      </el-form-item>
       <el-form-item label="排序：" prop="sort">
         <el-input v-model.number="productCate.sort"></el-input>
       </el-form-item>
@@ -52,7 +54,8 @@
     pId: 0,
     sort: 0,
     status: 1,
-    description: null
+    description: null,
+    code:null
 
   };
   export default {
@@ -71,7 +74,11 @@
         rules: {
           typeName: [
             {required: true, message: '请输入品牌名称', trigger: 'blur'},
-            {min: 0, max: 140, message: '长度在 0 到 140 个字符', trigger: 'blur'}
+            {min: 0, max: 512, message: '长度在 0 到 512 个字符', trigger: 'blur'}
+          ],
+          code: [
+            {required: true, message: '请输入编码', trigger: 'blur'},
+            {min: 0, max: 20, message: '长度在 0 到 20 个字符', trigger: 'blur'}
           ],
           sort: [
             {type:'number', message: '排序必须为整数', trigger: 'blur'}

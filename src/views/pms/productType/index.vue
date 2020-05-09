@@ -42,6 +42,9 @@
             </el-switch>
           </template>
         </el-table-column>
+        <el-table-column label="编号" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.code }}</template>
+        </el-table-column>
         <el-table-column label="排序" width="100" align="center">
           <template slot-scope="scope">{{scope.row.sort }}</template>
         </el-table-column>
@@ -52,10 +55,10 @@
               :disabled="scope.row.level | disableNextLevel"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
             </el-button>
-<!--            <el-button-->
-<!--              size="mini"-->
-<!--              @click="handleTransferProduct(scope.$index, scope.row)">转移商品-->
-<!--            </el-button>-->
+            <!--            <el-button-->
+            <!--              size="mini"-->
+            <!--              @click="handleTransferProduct(scope.$index, scope.row)">转移商品-->
+            <!--            </el-button>-->
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
@@ -85,7 +88,7 @@
 </template>
 
 <script>
-  import {fetchList,deleteProductCate,deleteProductCates,updateShowStatus,updateNavStatus} from '@/api/productType'
+  import {fetchList, deleteProductCate, deleteProductCates, updateShowStatus, updateNavStatus} from '@/api/productType'
 
   export default {
     name: "productTypeList",
@@ -99,7 +102,7 @@
           pageSize: 5
         },
         parentId: 0,
-        multipleSelection:[]
+        multipleSelection: []
       }
     },
     created() {
@@ -116,7 +119,7 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-      resetParentId(){
+      resetParentId() {
         this.listQuery.pageNum = 1;
         if (this.$route.query.parentId != null) {
           this.parentId = this.$route.query.parentId;
@@ -146,11 +149,11 @@
       },
       handleNavStatusChange(index, row) {
         let data = new URLSearchParams();
-        let ids=[];
+        let ids = [];
         ids.push(row.id)
-        data.append('ids',ids);
-        data.append('navStatus',row.navStatus);
-        updateNavStatus(data).then(response=>{
+        data.append('ids', ids);
+        data.append('navStatus', row.navStatus);
+        updateNavStatus(data).then(response => {
           this.$message({
             message: '修改成功',
             type: 'success',
@@ -160,7 +163,7 @@
       },
       handleShowStatusChange(index, row) {
 
-        updateShowStatus({id:row.id,status:row.status}).then(response=>{
+        updateShowStatus({id: row.id, status: row.status}).then(response => {
           this.$message({
             message: '修改成功',
             type: 'success',
@@ -175,7 +178,7 @@
         console.log('handleAddProductCate');
       },
       handleUpdate(index, row) {
-        this.$router.push({path:'/pms/updateProductType',query:{id:row.id}});
+        this.$router.push({path: '/pms/updateProductType', query: {id: row.id}});
       },
       handleDelete(index, row) {
 

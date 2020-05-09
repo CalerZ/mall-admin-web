@@ -60,6 +60,13 @@ export const asyncRouterMap = [
         meta: {title: '修改物品', icon: 'product-add'},
         hidden: true
       },
+      {
+        path: 'viewProduct',
+        name: 'viewProduct',
+        component: () => import('@/views/pms/product/view'),
+        meta: {title: '修改物品', icon: 'product-add'},
+        hidden: true
+      },
 
       //物品类型
       {
@@ -254,6 +261,7 @@ export const asyncRouterMap = [
         path: 'adduser',
         name: 'adduser',
         component: () => import('@/views/ums/admin/adduser'),
+        hidden: true
       },
       {
         path: 'role',
