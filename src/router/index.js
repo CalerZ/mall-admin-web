@@ -385,7 +385,9 @@ export const asyncRouterMap = [
         path: 'adduser',
         name: 'adduser',
         component: () => import('@/views/ums/admin/adduser'),
-        meta: {title: '添加用户', icon: 'ums-admin'}
+        meta: {title: '添加用户', icon: 'ums-admin'},
+        hidden:true
+       
       },
       {
         path: 'role',

@@ -21,7 +21,7 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="输入搜索：">
-            <el-input v-model="listQuery.keyword" class="input-width" placeholder="帐号/姓名" clearable></el-input>
+            <el-input v-model="listQuery.keyword" class="input-width" placeholder="帐号/姓名" clearable v-on:keyup.enter.native="handleSearchList"></el-input>
           </el-form-item>
         </el-form>
       </div>
@@ -58,7 +58,7 @@
           <template slot-scope="scope">{{scope.row.createTime | formatDateTime}}</template>
         </el-table-column>
         <el-table-column label="最后登录" width="160" align="center">
-          <template slot-scope="scope">{{scope.row.lastLoginTime | formatDateTime}}</template>
+          <template slot-scope="scope">{{scope.row.lastLoginTime==null?'暂无登录':scope.row.lastLoginTime }}</template>
         </el-table-column>
         <!--        <el-table-column label="备注"  align="center" >-->
         <!--          <template slot-scope="scope">{{scope.row.note }}</template>-->
@@ -282,6 +282,9 @@
       },
       handleAdd() {
         this.$router.push({path: '/ums/adduser'})
+
+
+        
        // this.dialogVisible = true;
         //this.isEdit = false;
         //this.admin = Object.assign({}, defaultAdmin);
@@ -379,6 +382,7 @@
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
+         
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;
