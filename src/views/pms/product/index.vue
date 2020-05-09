@@ -423,6 +423,8 @@
   }
 </script>
 <style scoped>
+
+
   .table-column {
     display: none;
   }

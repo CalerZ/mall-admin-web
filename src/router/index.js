@@ -254,6 +254,7 @@ export const asyncRouterMap = [
         path: 'adduser',
         name: 'adduser',
         component: () => import('@/views/ums/admin/adduser'),
+        hidden:true
       },
       {
         path: 'role',

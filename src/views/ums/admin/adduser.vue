@@ -1,38 +1,40 @@
 <template>
   <el-main>
     <el-form
-      ref="#"
+    :model="listQuery"
+      ref="listQuery"
       label-width="150px"
       size="small"
       style="width: 40%; margin-left: 28%;"
+      :rules="rules"
     >
-      <el-form-item label="帐号：">
-        <el-input v-model="username" style="width: 250px;"></el-input>
+      <el-form-item label="帐号：" prop="username">
+        <el-input v-model="listQuery.username" style="width: 250px;"></el-input>
       </el-form-item>
-      <el-form-item label="姓名：">
-        <el-input v-model="nickname" style="width: 250px;"></el-input>
+      <el-form-item label="姓名：" prop="nickname">
+        <el-input v-model="listQuery.nickname" style="width: 250px;"></el-input>
       </el-form-item>
       <el-form-item label="性别：">
-        <el-radio-group v-model="gender">
+        <el-radio-group v-model="listQuery.gender">
           <el-radio :label="1">男</el-radio>
           <el-radio :label="2">女</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="手机号：">
-        <el-input v-model="phone" style="width: 250px;"></el-input>
+        <el-input v-model="listQuery.phone" style="width: 250px;"></el-input>
       </el-form-item>
       <el-form-item label="邮箱：">
-        <el-input v-model="email" style="width: 250px;"></el-input>
+        <el-input v-model="listQuery.email" style="width: 250px;"></el-input>
       </el-form-item>
       <el-form-item label="公司：">
         <el-select
-          v-model="companyId"
+          v-model="listQuery.companyId"
           placeholder="请选择"
           size="small"
           style="width: 34%;"
         >
           <el-option
-            v-for="item in companyList"
+            v-for="item in listQuery.companyList"
             :key="item.id"
             :label="item.name"
             :value="item.id"
@@ -42,7 +44,7 @@
       </el-form-item>
       <el-form-item label="密码：">
         <el-input
-          v-model="password"
+          v-model="listQuery.password"
           type="password"
           style="width: 250px;"
         ></el-input>
@@ -50,14 +52,14 @@
 
       <el-form-item label="备注：">
         <el-input
-          v-model="note"
+          v-model="listQuery.note"
           type="textarea"
           :rows="5"
           style="width: 250px;"
         ></el-input>
       </el-form-item>
       <el-form-item label="是否启用：">
-        <el-radio-group v-model="status">
+        <el-radio-group v-model="listQuery.status">
           <el-radio :label="1">是</el-radio>
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
@@ -90,12 +92,8 @@ export default {
   name: "adminList",
   data() {
     return {
-      // listQuery: Object.assign({}, defaultListQuery),
-      // list: null,
-      ///total: null,
-      //listLoading: false,
-      // dialogVisible: false,
-    
+     listQuery: {
+       
       companyList:[],
 
       companyId:null,
@@ -109,12 +107,42 @@ export default {
       phone: "",
       status: 0,
       username: "",
+     },
+      // list: null,
+      ///total: null,
+      //listLoading: false,
+      // dialogVisible: false,
+    
       // isEdit: false,
       // allocDialogVisible: false,
       // allocRoleIds: [],
       // allRoleList: [],
       // allocAdminId: null,
       // companyList: []
+      rules: {
+          'username': [
+            {required: false, message: '请输入账号', trigger: 'blur'},
+            {type: 'number', message: '账号为英文字母'}
+
+          ],
+          'nickname': [
+            {required: false, message: '请输入姓名', trigger: 'blur'},
+            {type: 'string', message: '姓名为汉字'}
+          ],
+          'stock.onHandInventory': [
+            {required: false, message: '请输入现有库存', trigger: 'blur'},
+            {type: 'number', message: '现有库存必须为数字值'}
+          ],
+          'stock.reportedQuantity': [
+            {required: false, message: '请输入本月提报数量', trigger: 'blur'},
+            {type: 'number', message: '本月提报数量必须为数字值'}
+          ],
+          'stock.prodLineMembers': [
+            {required: false, message: '请输入生产线人数', trigger: 'blur'},
+            {type: 'number', message: '生产线人数必须为数字值'}
+          ],
+      }
+
     };
   },
   created() {
@@ -132,7 +160,7 @@ export default {
     //获取公司的名称
     getCompanys: function () {
       getCompany().then((response) => {
-        this.companyList = response.data;
+        this.listQuery.companyList = response.data;
         console.log(response.data);
       });
     },
@@ -145,20 +173,20 @@ export default {
       let data={
 	"birthday": "",
 	"city": "",
-	"companyId": this.companyId,
+	"companyId": this.listQuery.companyId,
 	"createTime":"",
-	"email": this.email,
-	"gender": this.gender,
+	"email": this.listQuery.email,
+	"gender": this.listQuery.gender,
 	"id": 0,
 	"job": "",
 	"lastLoginTime": "",
 	"memberLevelId": 0,
-	"nickname": this.nickname,
-	"note": this.note,
+	"nickname": this.listQuery.nickname,
+	"note": this.listQuery.note,
 	"password": this.password,
-	"phone": this.phone,
-	"status": this.status,
-	"username": this.username
+	"phone": this.listQuery.phone,
+	"status": this.listQuerystatus,
+	"username": this.listQuery.username
 }
       console.log(data);
 //添加用户
