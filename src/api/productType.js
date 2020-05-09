@@ -13,6 +13,14 @@ export function deleteProductCate(id) {
   })
 }
 
+export function deleteProductCates(ids) {
+  return request({
+    url:'/ptype/delete',
+    method:'post',
+    data:ids
+  })
+}
+
 export function createProductCate(data) {
   return request({
     url:'/ptype/insert',

@@ -7,8 +7,8 @@
       <el-form-item label="单位名称：" prop="utilName">
         <el-input v-model="productCate.utilName"></el-input>
       </el-form-item>
-      <el-form-item label="排序：">
-        <el-input v-model="productCate.sort"></el-input>
+      <el-form-item label="排序：" prop="sort">
+        <el-input v-model.number="productCate.sort"></el-input>
       </el-form-item>
       <el-form-item label="是否显示：">
         <el-radio-group v-model="productCate.status">
@@ -16,10 +16,6 @@
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
-      <!--      <el-form-item label="分类图标：">-->
-      <!--        <single-upload v-model="productCate.icon"></single-upload>-->
-      <!--      </el-form-item>-->
-
       <el-form-item>
         <el-button type="primary" @click="onSubmit('productCateFrom')">提交</el-button>
         <el-button v-if="!isEdit" @click="resetForm('productCateFrom')">重置</el-button>
@@ -29,8 +25,9 @@
 </template>
 
 <script>
-  import {fetchList, createProductAttr, updateProductAttr,deleteProductAttr, getProductAttr} from '@/api/productAttr';
+  import {fetchList, createProductAttr, updateProductAttr, deleteProductAttr, getProductAttr} from '@/api/productAttr';
   import SingleUpload from '@/components/Upload/singleUpload';
+  import {createUtil, updateUtil} from "../../../../api/util";
 
   const defaultProductCate = {
     utilName: null,
@@ -53,8 +50,11 @@
         selectProductCateList: [],
         rules: {
           utilName: [
-            {required: true, message: '请输入品牌名称', trigger: 'blur'},
+            {required: true, message: '请输入单位名称', trigger: 'blur'},
             {min: 0, max: 140, message: '长度在 0 到 140 个字符', trigger: 'blur'}
+          ],
+          sort: [
+            {type:'number', message: '排序必须为整数', trigger: 'blur'}
           ]
         },
         filterAttrs: [],
@@ -74,7 +74,6 @@
       }
     },
     methods: {
-
       onSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -84,7 +83,7 @@
               type: 'warning'
             }).then(() => {
               if (this.isEdit) {
-                updateProductAttr(this.$route.query.id, this.productCate).then(response => {
+                updateUtil(this.$route.query.id, this.productCate).then(response => {
                   this.$message({
                     message: '修改成功',
                     type: 'success',
@@ -93,7 +92,7 @@
                   this.$router.back();
                 });
               } else {
-                createProductAttr(this.productCate).then(response => {
+                createUtil(this.productCate).then(response => {
                   this.$refs[formName].resetFields();
                   this.resetForm(formName);
                   this.$message({

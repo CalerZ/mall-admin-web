@@ -138,8 +138,6 @@
   } from '@/api/product'
   import {fetchList as fetchSkuStockList, update as updateSkuStockList} from '@/api/skuStock'
   import {fetchList as fetchProductAttrList} from '@/api/productAttr'
-  import {fetchList as fetchBrandList} from '@/api/brand'
-  import {fetchListWithChildren} from '@/api/productCate'
   import {exportList} from '@/api/info'
 
   const defaultListQuery = {
@@ -192,20 +190,20 @@
         let ids = this.multipleSelection.map(item=>item.id);
         exportList(ids).then(result => {
           console.log(result)
-          debugger
-          const data = new Blob([result],{type:'application/vnd.ms-excel'})
-
-          const url = URL.createObjectURL(data)
-
-          const a = document.createElement('a')
-
-          a.href = url
-
-          a.download = 'table.xls'
-
-          a.click()
-
-          URL.revokeObjectURL(url)
+          // debugger
+          // const data = new Blob([result],{type:'application/vnd.ms-excel'})
+          //
+          // const url = URL.createObjectURL(data)
+          //
+          // const a = document.createElement('a')
+          //
+          // a.href = url
+          //
+          // a.download = 'table.xls'
+          //
+          // a.click()
+          //
+          // URL.revokeObjectURL(url)
 
         })
 

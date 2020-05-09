@@ -140,7 +140,6 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          console.log()
           let ids = this.multipleSelection.map(supplier=>supplier.id);
           deleteSuppliers(ids).then(response => {
             this.$message({

@@ -4,7 +4,7 @@
 <script>
   import ProductCateDetail from './components/ProductCateDetail'
   export default {
-    name: 'addProductCate',
+    name: 'addProductType',
     components: { ProductCateDetail }
   }
 </script>

@@ -5,6 +5,13 @@
       <span style="margin-top: 5px">数据列表</span>
       <el-button
         class="btn-add"
+        type="danger"
+        @click="handleDelete()"
+        size="mini">
+        删除
+      </el-button>
+      <el-button
+        class="btn-add"
         @click="handleAddProductUtil()"
         size="mini">
         添加
@@ -15,7 +22,9 @@
                 style="width: 100%"
                 :data="list"
                 v-loading="listLoading"
+                @selection-change="handleSelectionChange"
                 border>
+        <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="编号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
@@ -41,11 +50,6 @@
               size="mini"
               @click="handleUpdate(scope.$index, scope.row)">编辑
             </el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -62,24 +66,11 @@
         :total="total">
       </el-pagination>
     </div>
-    <el-dialog
-      :title="dialogTitle"
-      :visible.sync="dialogVisible"
-      width="30%">
-      <el-form ref="productAttrCatForm":model="productAttrCate" :rules="rules" label-width="120px">
-        <el-form-item label="类型名称" prop="name">
-          <el-input v-model="productAttrCate.name" auto-complete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirm('productAttrCatForm')">确 定</el-button>
-      </span>
-    </el-dialog>
+
   </div>
 </template>
 <script>
-  import {fetchList,createProductAttr,deleteProductAttr,updateProductAttr} from '@/api/productAttr'
+  import {fetchList, createUtil, updateUtilStatus, deleteUtil,deleteUtils,getUtil,updateUtil,fetchaAllList} from '@/api/util'
 
   export default {
     name: 'productUtilList',
@@ -90,7 +81,8 @@
         listLoading: true,
         listQuery: {
           pageNum: 1,
-          pageSize: 5
+          pageSize: 5,
+          keyword:null
         },
         dialogVisible: false,
         dialogTitle:'',
@@ -98,6 +90,7 @@
           name:'',
           id:null
         },
+        multipleSelection: [],
         rules: {
           name: [
             { required: true, message: '请输入类型名称', trigger: 'blur' }
@@ -109,6 +102,9 @@
       this.getList();
     },
     methods: {
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
@@ -121,12 +117,10 @@
         this.$router.push('/pms/addProductUtil');
       },
       handleShowStatusChange(index, row) {
-        let data = new URLSearchParams();
-        let ids=[];
-        ids.push(row.id)
-        data.append('ids',ids);
-        data.append('showStatus',row.showStatus);
-        updateShowStatus(data).then(response=>{
+        // let data = new URLSearchParams();
+        // data.append('id',row.id);
+        // data.append('status',row.status);
+        updateUtilStatus({id:row.id,status:row.status}).then(response=>{
           this.$message({
             message: '修改成功',
             type: 'success',
@@ -147,13 +141,23 @@
         this.listQuery.pageNum = val;
         this.getList();
       },
-      handleDelete(index, row) {
-        this.$confirm('是否要删除该品牌', '提示', {
+      handleDelete() {
+
+        if(this.multipleSelection.length<1){
+          this.$message({
+            message: '未选择单位！',
+            type: 'warning',
+            duration: 1000
+          });
+          return;
+        }
+        this.$confirm('是否要删除该单位', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          deleteProductAttr(row.id).then(response=>{
+          let ids = this.multipleSelection.map(supplier=>supplier.id);
+          deleteUtils(ids).then(response=>{
             this.$message({
               message: '删除成功',
               type: 'success',
@@ -164,18 +168,9 @@
         });
       },
       handleUpdate(index, row) {
-        // this.dialogVisible = true;
-        // this.dialogTitle = "编辑类型";
-        // this.productAttrCate.name = row.name;
-        // this.productAttrCate.id = row.id;
         this.$router.push({path:'/pms/updateProductUtil',query:{id:row.id}});
       },
-      getAttrList(index, row) {
-        this.$router.push({path: '/pms/productAttrList',query:{cid:row.id,cname:row.name,type:0}})
-      },
-      getParamList(index, row) {
-        this.$router.push({path: '/pms/productAttrList',query:{cid:row.id,cname:row.name,type:1}})
-      },
+
       handleConfirm(formName){
         this.$refs[formName].validate((valid) => {
           if (valid) {

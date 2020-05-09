@@ -130,7 +130,7 @@
   import {fetchList as fetchSkuStockList, update as updateSkuStockList} from '@/api/skuStock'
   import {fetchList as fetchProductAttrList} from '@/api/productAttr'
   import {fetchList as fetchBrandList} from '@/api/brand'
-  import {fetchListWithChildren} from '@/api/productCate'
+  import {fetchListWithChildren} from '@/api/productType'
 
   const defaultListQuery = {
     keyword: null,

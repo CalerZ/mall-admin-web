@@ -3,13 +3,15 @@
     <el-form :model="value" :rules="rules" ref="productInfoForm" label-width="120px" style="width: 720px" size="small">
 
       <el-form-item label="物品分类：">
-        <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb separator-class="el-icon-arrow-right" v-if="value.product.type1!=null&&value.product.type2!=null&&value.product.type1!=''&&value.product.type2!=''" >
           <el-breadcrumb-item>{{value.product.type1 |getProductTypeName }}</el-breadcrumb-item>
           <el-breadcrumb-item>{{value.product.type2 |getProductTypeName}}</el-breadcrumb-item>
         </el-breadcrumb>
+        <div v-else-if="value.product.type1!=null&&value.product.type1!=''&&(value.product.type2==null||value.product.type2=='')">{{value.product.type1 |getProductTypeName }}</div>
+        <div v-else-if="value.product.type2!=null&&value.product.type2!=''&&(value.product.type1==null||value.product.type1=='')">{{value.product.type2 |getProductTypeName }}</div>
       </el-form-item>
       <el-form-item label="物品编码：" prop="product.code">
-        <el-input v-model="value.product.code"></el-input>
+        <el-input v-model="value.product.code" disabled></el-input>
       </el-form-item>
       <el-form-item label="物品名称：" prop="product.name">
         <el-input v-model="value.product.name"></el-input>
@@ -30,14 +32,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="单价：" prop="product.price" >
-     <!--   <el-col :span="11">
-        <el-input  v-model.number="value.product.price"></el-input>
-        </el-col>
-        <el-col :span="2">
-          <el-input value="元" disabled></el-input>
-        </el-col>-->
         <el-col :span="11">
-        <el-input v-model="value.product.price" class="input-width">
+        <el-input v-model.number="value.product.price" class="input-width">
           <template slot="append">元</template>
         </el-input>
         </el-col>
@@ -73,8 +69,9 @@
   import {fetchList as fetchProductAttrList} from '@/api/productAttr'
 
 
-  import {fetchAllList as fetchProductUtilList} from '@/api/productUtil'
-  import {fetchAllList as fetchProductTypeList} from '@/api/productCate'
+  import {fetchAllList as fetchProductUtilList} from '@/api/util'
+  import {partNo } from '@/api/product'
+  import {fetchAllList as fetchProductTypeList} from '@/api/productType'
 
 
   import SingleUpload from '@/components/Upload/singleUpload'
@@ -156,6 +153,7 @@
     created() {
       this.getProductUtilList();
       this.getProductTypeList();
+      this.getPartNo();
     },
     // beforeUpdate() {
     //   than = this
@@ -175,6 +173,12 @@
     },
 
     methods: {
+
+      getPartNo(){
+        partNo().then(response=>{
+          this.value.product.code = response.data;
+        })
+      },
 
       //表单验证
       handleNext(formName) {
