@@ -7,6 +7,7 @@
       <el-step title="选择物品供应商"></el-step>
     </el-steps>
     <product-info-detail
+      ref="productInfoDetail"
       v-show="showStatus[0]"
       v-model="productParam"
       :is-edit="isEdit"
@@ -14,6 +15,7 @@
     </product-info-detail>
 
     <product-attr-detail
+      ref="productAttrDetail"
       v-show="showStatus[1]"
       v-model="productParam"
       :is-edit="isEdit"
@@ -22,6 +24,7 @@
     </product-attr-detail>
 
     <product-sale-detail
+      ref="productSaleDetail"
       v-show="showStatus[2]"
       v-model="productParam"
       :is-edit="isEdit"
@@ -30,6 +33,7 @@
     </product-sale-detail>
 
     <product-relation-detail
+      ref="productRelationDetail"
       v-show="showStatus[3]"
       v-model="productParam"
       :is-edit="isEdit"
@@ -143,8 +147,13 @@
                 message: '提交成功',
                 duration: 1000
               });
+              //初始化表单
+              debugger
+              console.log(this.$refs)
+              this.$refs.productAttrDetail.resetForm("productInfoForm");
+              this.$refs.productRelationDetail.resetForm("productRelationForm");
+              this.$refs.productSaleDetail.resetForm("productSaleForm");
               this.$router.push("/pms/product")
-              // location.reload();
               this.productParam=Object.assign({}, defaultProductParam)
             });
           }

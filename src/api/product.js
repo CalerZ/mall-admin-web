@@ -101,10 +101,11 @@ export function getApplicationProductList(data) {
   })
 }
 
-export function partNo() {
+export function partNo(data) {
   return request({
     url:'/product/productNo',
     method:'post',
+    params:data
   })
 }
 

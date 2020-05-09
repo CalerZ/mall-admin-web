@@ -83,10 +83,10 @@
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column fixed label="编号" width="100" align="center">
+        <el-table-column fixed label="编号" width="200" align="center">
           <template slot-scope="scope">{{scope.row.code}}</template>
         </el-table-column>
-        <el-table-column fixed label="物品名称" width="150" align="center">
+        <el-table-column fixed label="物品名称" width="200" align="center">
           <template slot-scope="scope">
             <p>{{scope.row.name}}</p>
           </template>
@@ -131,7 +131,7 @@
         </el-table-column>
         <el-table-column label="供应商" width="120" align="center">
           <template slot-scope="scope">
-            {{scope.row.supplierId }}
+            {{scope.row.supplierId |filterSupplierName }}
           </template>
         </el-table-column>
         <el-table-column label="发布" width="140" align="center">
@@ -186,6 +186,7 @@
   } from '@/api/product'
   import {fetchAllList as fetchTypeList} from '@/api/productType'
   import {fetchAllList as getAllMember} from '@/api/login';
+  import {fetchaAllList as getAllSupplier} from '@/api/supplier';
   let than;
   const defaultListQuery = {
     keyword: null,
@@ -234,8 +235,9 @@
         }],
         isView: false,
         productTypeList: [],
+        supplierList: [],
         userList: [],
-        activeNames: ['1']
+        activeNames: ['0']
       }
     },
     created() {
@@ -243,6 +245,7 @@
       this.isView = this.view
       this.getProductTypeList();
       this.getAllUser();
+      this.getAllSupplierList();
     },
     watch: {
       selectProductCateValue: function (newValue) {
@@ -270,7 +273,20 @@
           }
         })
         return userName;
+      },
+      filterSupplierName(ids){
+        let res="";
+        ids&&ids.split(",").forEach(id=>{
+         than.supplierList.forEach(item=>{
+           if(item.id==id){
+             res +=item.name+",";
+           }
+         })
+
+       });
+        return res.substring(0,res.length-1);
       }
+
     },
     methods: {
       getAllUser() {
@@ -282,6 +298,13 @@
       getProductTypeList() {
         fetchTypeList(0).then(response => {
           this.productTypeList = response.data;
+        })
+      },
+
+      //获取供应商
+      getAllSupplierList() {
+        getAllSupplier(0).then(response => {
+          this.supplierList = response.data;
         })
       },
 
@@ -363,6 +386,7 @@
       },
       handleShowProduct(index, row) {
         console.log("handleShowProduct", row);
+        this.$router.push({path: '/pms/viewProduct', query: {product: row}});
       },
       handleShowVerifyDetail(index, row) {
         console.log("handleShowVerifyDetail", row);

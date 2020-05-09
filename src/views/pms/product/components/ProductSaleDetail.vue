@@ -89,6 +89,10 @@
           this.purchaseMethodList.unshift({id: 0, name: "默认采购方式"})
         });
       },
+      //重置表单
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
       //表单验证
       handleNext(formName) {
         this.$refs[formName].validate((valid) => {
@@ -114,9 +118,6 @@
       handlePrev() {
         this.$emit('prevStep')
       },
-      // handleNext() {
-      //   this.$emit('nextStep')
-      // }
     }
   }
 </script>
