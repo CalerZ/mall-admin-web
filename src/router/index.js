@@ -326,7 +326,7 @@ hidden:true
         path: 'sysDictList',
         name: 'sysDictList',
         component: () => import('@/views/ums/sysDict/index'),
-        meta: {title: '字典列表'},
+        meta: {title: '字典列表',icon: 'ums-resource'},
       },
       {
         path: 'addSysDict',
