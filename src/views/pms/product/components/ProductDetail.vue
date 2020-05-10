@@ -166,6 +166,9 @@
   .form-container {
     width: 800px;
   }
+  .el-tree{
+    left:10%;
+  }
 </style>
 
 

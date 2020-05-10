@@ -15,3 +15,14 @@ export function getCompany() {
   });
   
 }
+//验证账号是否存在
+
+export function getOnePeopelUsername(username) {
+  //获取所有的公司
+  return request({
+    url: "/member/checkName?username="+username,
+    method: "get",
+   
+  });
+  
+}
