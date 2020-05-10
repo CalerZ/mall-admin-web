@@ -1,5 +1,6 @@
 <template>
   <el-main>
+    
     <el-form
     :model="listQuery"
       ref="listQuery"
@@ -8,6 +9,7 @@
       style="width: 40%; margin-left: 28%;"
       :rules="rules"
     >
+   
       <el-form-item label="帐号：" prop="username">
         <el-input v-model="listQuery.username" style="width: 250px;"></el-input>
       </el-form-item>
@@ -64,6 +66,7 @@
           <el-radio :label="0">否</el-radio>
         </el-radio-group>
       </el-form-item>
+       
     </el-form>
     <el-button
       @click="dialogVisible = false"
@@ -78,6 +81,7 @@
       style="margin-left: 2%; width: 150px;"
       >确 定</el-button
     >
+   
   </el-main>
 </template>
 

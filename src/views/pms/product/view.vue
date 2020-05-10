@@ -60,7 +60,8 @@
       }
     },
     created() {
-      this.product = this.$route.query.product
+      this.product = this.$route.query.product;
+      console.log(this.product)
     },
     methods: {}
   }

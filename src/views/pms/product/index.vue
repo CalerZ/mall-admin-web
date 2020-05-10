@@ -386,6 +386,7 @@
       },
       handleShowProduct(index, row) {
         console.log("handleShowProduct", row);
+
         this.$router.push({path: '/pms/viewProduct', query: {product: row}});
       },
       handleShowVerifyDetail(index, row) {
