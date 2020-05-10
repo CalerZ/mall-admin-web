@@ -64,7 +64,7 @@ export const asyncRouterMap = [
         path: 'viewProduct',
         name: 'viewProduct',
         component: () => import('@/views/pms/product/view'),
-        meta: {title: '修改物品', icon: 'product-add'},
+        meta: {title: '查看物品', icon: 'product-add'},
         hidden: true
       },
 
