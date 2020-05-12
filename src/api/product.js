@@ -6,6 +6,14 @@ export function fetchList(params) {
     params:params
   })
 }
+//发布的物料
+export function releaseList(params) {
+  return request({
+    url:'/product/releaseList',
+    method:'post',
+    params:params
+  })
+}
 
 export function fetchSimpleList(params) {
   return request({

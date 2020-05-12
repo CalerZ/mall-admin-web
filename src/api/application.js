@@ -15,6 +15,15 @@ export function createApplication(data) {
     data:data
   })
 }
+export function submitApplication(data) {
+  return request({
+    url:'/application/submit',
+    method:'post',
+    data:data
+  })
+}
+
+
 
 export function updateApplication(data) {
   return request({
@@ -82,4 +91,29 @@ export function formNo(){
     method:'post',
   })
 }
+
+
+export function selectExcelData(data){
+  return request({
+    url:'/application/selectExcelData',
+    method:'post',
+    params:data
+  })
+}
+
+export function finishApplication(data){
+  return request({
+    url:'/application/finish',
+    method:'post',
+    data:data
+  })
+}
+
+export function cancel(id){
+  return request({
+    url:'/application/cancel/'+id,
+    method:'post',
+  })
+}
+
 

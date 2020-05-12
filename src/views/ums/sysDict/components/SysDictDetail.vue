@@ -1,24 +1,28 @@
 <template> 
   <el-card class="form-container" shadow="never">
     <el-form :model="sysDict" :rules="rules" ref="sysDictFrom" label-width="150px">
-      <el-form-item label="父级：" prop="code">
+      <el-form-item label="父级：" prop="pid">
         <el-input v-model="sysDict.pid"></el-input>
       </el-form-item>
-      <el-form-item label="数据类型：" prop="name">
+      <el-form-item label="数据类型：" prop="dataType">
         <el-input v-model="sysDict.dataType"></el-input>
       </el-form-item>
-      <el-form-item label="数据编码：" prop="name">
+      <el-form-item label="数据编码：" prop="dataCode">
         <el-input v-model="sysDict.dataCode"></el-input>
       </el-form-item>
-      <el-form-item label="数据值：" prop="name">
+      <el-form-item label="数据值：" prop="dataValue">
         <el-input v-model="sysDict.dataValue"></el-input>
       </el-form-item>
-      <el-form-item label="是否固定值：" prop="name">
-        <el-input v-model="sysDict.isFixed"></el-input>
-      </el-form-item>
-      <el-form-item label="状态：">
+      <el-form-item label="是否固定值：" prop="isFixed">
+<!--        <el-input v-model="sysDict.isFixed"></el-input>-->
         <el-switch
-          @change="handleShowStatusChange()"
+          :active-value="1"
+          :inactive-value="0"
+          v-model="sysDict.isFixed">
+        </el-switch>
+      </el-form-item>
+      <el-form-item label="是否启用：">
+        <el-switch
           :active-value="1"
           :inactive-value="0"
           v-model="sysDict.status">
@@ -32,7 +36,7 @@
           v-model="sysDict.dataDesc">
         </el-input>
       </el-form-item>
-      <el-form-item label="排序：" prop="name">
+      <el-form-item label="排序：" prop="sort">
         <el-input v-model="sysDict.sort"></el-input>
       </el-form-item>
       <el-form-item>
@@ -46,11 +50,14 @@
   import {fetchList, insert, updateStatus, del, dels, get, update, fetchaAllList} from '@/api/sysDict'
 
   const defaultSysDict = {
-    code: null,
-    name: null,
+    pid:null,
+    dataType:null,
+    dataCode:null,
+    dataValue:null,
+    isFixed:0,
     status: 1,
-    discription: null,
     sort: 0,
+    dataDesc:null
   };
   export default {
     name: 'SysDictDetail',
@@ -65,11 +72,14 @@
       return {
         sysDict: Object.assign({}, defaultSysDict),
         rules: {
-          name: [
-            {required: true, message: '请输入供应商名称', trigger: 'blur'},
+          dataType: [
+            {required: true, message: '请输入数据类型', trigger: 'blur'},
           ],
-          code: [
-            {required: true, message: '请输入供应商编码', trigger: 'blur'}
+          dataCode: [
+            {required: true, message: '请输入数据编码', trigger: 'blur'},
+          ],
+          dataValue: [
+            {required: true, message: '请输入数据值', trigger: 'blur'}
           ],
           sort: [
             {type: 'number', message: '排序必须为数字'}
@@ -90,13 +100,16 @@
       onSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            debugger
             this.$confirm('是否提交数据', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
               if (this.isEdit) {
-                update(this.$route.query.id, this.sysDict).then(response => {
+                debugger
+                console.log(this.sysDict)
+                update(this.sysDict).then(response => {
                   this.$refs[formName].resetFields();
                   this.$message({
                     message: '修改成功',

@@ -42,7 +42,7 @@ export function get(id) {
   })
 }
 
-export function update(id,data) {
+export function update(data) {
   return request({
     url:'/sysDict/update',
     method:'post',

@@ -1,164 +1,73 @@
 <template> 
   <div class="app-container">
-    <el-card class="filter-container" shadow="never">
-      <div>
-        <i class="el-icon-search"></i>
-        <span>筛选搜索</span>
-        <el-button
-          style="float: right"
-          @click="handleSearchList()"
-          type="primary"
-          size="small">
-          查询结果
-        </el-button>
-        <el-button
-          style="float: right;margin-right: 15px"
-          @click="handleResetSearch()"
-          size="small">
-          重置
-        </el-button>
+    <el-card class="box-card" >
+    <div slot="header" class="clearfix">
+      <span>物品导入</span>
+    </div>
+    <el-row :gutter="20">
+      <el-col :span="6"><div class="grid-content bg-purple">物品导入</div></el-col>
+      <el-col :span="8"><div class="grid-content bg-purple"> <el-button type="primary" size="mini" plain>导入</el-button></div></el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="6"><div class="grid-content bg-purple">模板</div></el-col>
+      <el-col :span="8"><div class="grid-content bg-purple"><el-button type="primary" size="mini" plain>下载模板</el-button></div></el-col>
+    </el-row>
+    <el-row :gutter="20">
+      <el-col :span="6"><div class="grid-content bg-purple">导入说明</div></el-col>
+      <el-col :span="8"><div class="grid-content bg-purple">导入说明xxxxxxxxxxxxxxxxxx</div></el-col>
+    </el-row>
+  </el-card>
+    <el-card class="box-card" >
+      <div slot="header" class="clearfix">
+        <span>导入详情</span>
       </div>
-      <div style="margin-top: 15px">
-        <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-
-          <el-form-item label="申请日期：">
-            <div class="block">
-              <el-date-picker
-                v-model="listQuery.date"
-                type="daterange"
-                :picker-options="pickerOptions"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                align="right">
-              </el-date-picker>
-            </div>
-          </el-form-item>
-          <el-form-item label="季度：">
-            <el-select v-model="listQuery.quarter" placeholder="全部" clearable>
-              <el-option
-                v-for="item in quarterList"
-                :key="item.id"
-                :label="item.value"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="年度：">
-            <el-select v-model="listQuery.year" placeholder="全部" clearable>
-              <el-option
-                v-for="item in yearList"
-                :key="item.id"
-                :label="item.value"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-card>
-    <el-card class="operate-container" shadow="never">
-      <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
-      <el-button
-        class="btn-add"
-        @click="exportData()"
-        size="mini">
-        导出
-      </el-button>
-    </el-card>
-    <div class="table-container">
-      <el-table ref="productTable"
-                :data="list"
-                style="width: 100% ;line-height: 15px"
-                v-loading="listLoading"
-                border>
-        <!--      <el-table-column fixed label="编号" width="200" align="center">
-                <template slot-scope="scope">{{scope.row.code}}</template>
-              </el-table-column>-->
-        <el-table-column fixed label="序号" align="center" type="index" width="50">
-        </el-table-column>
-        <el-table-column fixed label="物品名称" width="200" align="center">
-          <template slot-scope="scope">
-            <p>{{scope.row.productName}}</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="类型" align="center" width="200">
-          <template slot-scope="scope">
-            <el-breadcrumb separator-class="el-icon-arrow-right">
-              <el-breadcrumb-item>{{scope.row.type }}</el-breadcrumb-item>
-            </el-breadcrumb>
-          </template>
-        </el-table-column>
-        <el-table-column label="规格" width="230" align="center">
-          <template slot-scope="scope">
-            {{scope.row.specifications}}
-          </template>
-        </el-table-column>
-        <el-table-column label="标准" width="230" align="center">
-          <template slot-scope="scope">
-            {{scope.row.standard}}
-          </template>
-        </el-table-column>
-        <el-table-column label="价格" width="120" align="center">
-          <template slot-scope="scope">
-            ￥{{scope.row.price}}
-          </template>
-        </el-table-column>
-        <el-table-column label="单位" width="120" align="center">
-          <template slot-scope="scope">
-            {{scope.row.unit}}
-          </template>
-        </el-table-column>
-        <!--  <el-table-column label="时间" width="153" align="center">
+      <div class="table-container">
+        <el-table ref="productTable"
+                  :data="list"
+                  style="width: 100% ;line-height: 15px"
+                  v-loading="listLoading"
+                  border
+                  :cell-class-name="tableRowClassName"
+                  :header-cell-class-name="tableHeaderClassName">
+          <el-table-column fixed label="序号" align="center" type="index" width="50">
+          </el-table-column>
+          <el-table-column  fixed label="物品名称" width="200" align="center">
             <template slot-scope="scope">
-              {{scope.row.createTime }}
+              <p>{{scope.row.productName}}111</p>
             </template>
-          </el-table-column>-->
-        <el-table-column label="生产线人数" width="120" align="center">
-          <template slot-scope="scope">
-            <p>{{scope.row.prodLineMembers }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="安全库存" width="120" align="center">
-          <template slot-scope="scope">
-            {{scope.row.safetyStock }}
-          </template>
-        </el-table-column>
-        <el-table-column label="上月数量" width="120" align="center">
-          <template slot-scope="scope">
-            <p>{{scope.row.lastMonthQuantity }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="现有库存" width="120" align="center">
-          <template slot-scope="scope">
-            <p>{{scope.row.onHandInventory }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="本月提报数量" width="120" align="center">
-          <template slot-scope="scope">
-            <p>{{scope.row.reportedQuantity }}</p>
-          </template>
-        </el-table-column>
-        <el-table-column label="采购方式" width="120" align="center">
-          <template slot-scope="scope">
-            <p>{{scope.row.purchaseMethod }}</p>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <div class="pagination-container">
-      <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        layout="total, sizes,prev, pager, next,jumper"
-        :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
-        :current-page.sync="listQuery.pageNum"
-        :total="total">
-      </el-pagination>
-    </div>
+          </el-table-column>
+          <el-table-column label="类型" align="center" >
+            <template slot-scope="scope">
+              <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item>{{scope.row.type }}</el-breadcrumb-item>
+              </el-breadcrumb>
+            </template>
+          </el-table-column>
+          <el-table-column  label="结果" align="center">
+            <template slot-scope="scope">
+              {{scope.row.specifications}}
+            </template>
+          </el-table-column>
+          <el-table-column label="时间" align="center">
+            <template slot-scope="scope">
+              {{scope.row.standard}}
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="pagination-container">
+          <el-pagination
+            background
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            layout="total, sizes,prev, pager, next,jumper"
+            :page-size="listQuery.pageSize"
+            :page-sizes="[5,10,15]"
+            :current-page.sync="listQuery.pageNum"
+            :total="total">
+          </el-pagination>
+        </div>
+      </div>
+    </el-card>
   </div>
 </template>
 <script>
@@ -176,7 +85,7 @@
 
   };
   export default {
-    name: "productViewList",
+    name: "importProduct",
     props: {
       view: {
         type: Boolean,
@@ -186,6 +95,7 @@
     data() {
       than = this;
       return {
+
 
         editSkuInfo: {
           dialogVisible: false,
@@ -275,6 +185,12 @@
       }
     },
     methods: {
+      tableHeaderClassName({row, rowIndex}){
+        return 'el-table-header-customer';
+      },
+      tableRowClassName({row, rowIndex}) {
+        return 'el-table-column-customer';
+      },
       // 近一个月
       getLastMonth() {
         var now = new Date();
@@ -367,10 +283,12 @@
     }
   }
 </script>
-<style scoped>
+<style >
   .el-table-column-row-height {
     max-height: 30px;
   }
+
+
 </style>
 
 

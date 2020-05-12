@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 50px">
+  <div >
     <el-form :model="value"  ref="productInfoForm" label-width="120px" style="width: 720px;margin: 0 auto" size="small">
       <el-form-item label="申请单单号：">
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -13,8 +13,9 @@
       <el-form-item label="申请人公司：" >
         <el-input v-model="company" disabled></el-input>
       </el-form-item>
-      <el-form-item label="审核人：" prop="applicationForm.approver">
+      <el-form-item label="审核人：" disabled prop="applicationForm.approver">
         <el-select
+          disabled
           v-model="value.applicationForm.approver"
           placeholder="请选择审核人">
           <el-option
@@ -25,25 +26,27 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="审核状态："  >
+    <!--  <el-form-item label="审核状态："  >
         <el-switch
+          disabled
           v-model="value.applicationForm.applyStatus"
           :active-value="1"
           :inactive-value="0"
           disabled>
         </el-switch>
-      </el-form-item>
-      <el-form-item label="描述：">
+      </el-form-item>-->
+      <el-form-item label="描述：" disabled>
         <el-input
+          disabled
           type="textarea"
           :rows="4"
           placeholder="请输入内容"
           v-model="value.applicationForm.description">
         </el-input>
       </el-form-item>
-      <el-form-item style="text-align: center">
+<!--      <el-form-item style="text-align: center">
         <el-button type="primary" size="medium" @click="handleNext('productInfoForm')">下一步，填写物品信息</el-button>
-      </el-form-item>
+      </el-form-item>-->
     </el-form>
   </div>
 </template>

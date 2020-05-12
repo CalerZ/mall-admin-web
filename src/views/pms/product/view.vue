@@ -5,116 +5,79 @@
         <span style="font-size:30px">{{ product.name }}详情信息：</span>
       </div>
       <el-row>
-        <el-col :span="6" align="center" style="line-height: 20px;">
+        <el-col :span="8" align="center" style="line-height: 20px;">
           <div class="grid-content bg-table-head">物料编码:</div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="16">
           <div class="grid-content bg-purple">{{ product.code }}</div>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="6" align="center" style="line-height: 20px;">
+        <el-col :span="8" align="center" style="line-height: 20px;">
           <div class="grid-content bg-table-head">类型:</div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="16">
           <div class="grid-content bg-purple">
             {{ product.type1Name }}>{{ product.type2Name }}
           </div>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="6">
+        <el-col :span="4">
           <div class="grid-content bg-table-head">单位:</div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="8">
           <div class="grid-content bg-purple">{{ product.utilName }}</div>
         </el-col>
-        </el-row>
-        <el-row>
-        <el-col :span="6">
+        <el-col :span="4">
           <div class="grid-content bg-table-head">规格:</div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="8">
           <div class="grid-content bg-purple">{{ product.specifications }}</div>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="6">
+        <el-col :span="4">
           <div class="grid-content bg-table-head">标准</div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="8">
           <div class="grid-content bg-purple">{{ product.standard }}</div>
         </el-col>
-        </el-row>
-        <el-row>
-        <el-col :span="6">
+        <el-col :span="4">
           <div class="grid-content bg-table-head">价格</div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="8">
           <div class="grid-content bg-purple">{{ product.price }}</div>
         </el-col>
       </el-row>
-      
+      <el-row> </el-row>
       <el-row>
-        <el-col :span="6">
+        <el-col :span="8">
           <div class="grid-content bg-table-head">供应商</div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="16">
           <div class="grid-content bg-purple">
             {{ product.supplierId | filterSupplierName }}
           </div>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="6">
-          <div class="grid-content bg-table-head">安全库存</div>
-        </el-col>
-        <el-col :span="14">
-          <div class="grid-content bg-purple">{{ stock.safetyStock }}</div>
-        </el-col>
-        </el-row><el-row>
-        <el-col :span="6">
-          <div class="grid-content bg-table-head">上月数量</div>
-        </el-col>
-        <el-col :span="14">
-          <div class="grid-content bg-purple">{{ stock.lastMonthQuantity }}</div>
-        </el-col>
-        </el-row><el-row>
-        <el-col :span="6">
-          <div class="grid-content bg-table-head">现有库存</div>
-        </el-col>
-        <el-col :span="14">
-          <div class="grid-content bg-purple">{{ stock.onHandInventory }}</div>
-        </el-col>
-        </el-row><el-row>
-        <el-col :span="6">
-          <div class="grid-content bg-table-head">本月提报数量</div>
-        </el-col>
-        <el-col :span="14">
-          <div class="grid-content bg-purple">{{ stock.reportedQuantity }}</div>
-        </el-col>
-        </el-row><el-row>
-        <el-col :span="6">
-          <div class="grid-content bg-table-head">时间</div>
-        </el-col>
-        <el-col :span="14">
-          <div class="grid-content bg-purple">{{ product.createTime }}</div>
-        </el-col>
-        </el-row>
-      <el-row>
-        <el-col :span="6">
+        <el-col :span="4">
           <div class="grid-content bg-table-head">创建人</div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="4">
           <div class="grid-content bg-purple">{{ product.createrName }}</div>
         </el-col>
-        </el-row>
-       
-        <el-row>
-        <el-col :span="6">
+        <el-col :span="4">
+          <div class="grid-content bg-table-head">时间</div>
+        </el-col>
+        <el-col :span="4">
+          <div class="grid-content bg-purple">{{ product.createTime }}</div>
+        </el-col>
+        <el-col :span="4">
           <div class="grid-content bg-table-head">发布状态</div>
         </el-col>
-        <el-col :span="14">
+        <el-col :span="4">
           <div class="grid-content bg-purple">
             {{ product.status == 1 ? "已发布" : "未发布" }}
           </div>
@@ -127,7 +90,6 @@
 import ProductDetail from "./components/ProductDetail";
 let than;
 import { fetchaAllList as getAllSupplier } from "@/api/supplier";
-import {getProduct} from "@/api/product";
 export default {
   name: "updateProduct",
 
@@ -136,24 +98,14 @@ export default {
     return {
       product: null,
       supplierList: [],
-      stock:{}
     };
   },
   created() {
     this.product = this.$route.query.product;
     this.getAllSupplierList();
     console.log(this.product);
-    this.getStock(this.product.id)
   },
   methods: {
-    //获取库存信息
-    getStock:function(id){
-   getProduct(id).then((response)=>{
-     console.log(response.data.stock)
-     this.stock=response.data.stock;
-   })
-
-    },
     //获取供应商
     getAllSupplierList() {
       getAllSupplier(0).then((response) => {
@@ -179,14 +131,16 @@ export default {
 };
 </script>
 <style scoped>
-
+.form-container{
+  left:10%;
+}
 .el-row {
   /*margin-bottom: 20px;*/
 }
 .bg-table-head {
   color: white;
-  background-color:#0070c1;
-  font-size: 14px;
+  background-color: cadetblue;
+  font-size: 18px;
 }
 
 .el-col {
@@ -198,7 +152,7 @@ export default {
 }
 
 .bg-purple {
-  background:white;
+  background: #d3dce6;
 }
 
 .bg-purple-light {
@@ -222,7 +176,7 @@ export default {
 }
 
 .item {
-  margin-bottom: 14px;
+  margin-bottom: 18px;
 }
 el-col div {
 }
@@ -237,6 +191,6 @@ el-col div {
 }
 
 .box-card {
-  width: 460px;
+  width: 480px;
 }
 </style>

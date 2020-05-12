@@ -156,4 +156,46 @@ a:hover {
 .color-info {
   color: #909399;
 }
+.el-table .el-table-column-customer{
+  line-height: 16px;
+  margin: 0 0;
+  padding: 0 0 ;
+  max-height: 20px;
+  border: 1px solid #EBEEF5;
+  min-width: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  position: relative;
+  text-align: left;
+}
+.el-table .el-table-header-customer{
+  line-height: 35px;
+  margin: 0 0;
+  padding: 0 0 ;
+  min-width: 0;
+  -webkit-box-sizing: border-box;
+  border: 1px solid #EBEEF5;
+  box-sizing: border-box;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  position: relative;
+  text-align: left;
+}
+.el-table .cell{
+  margin: 8px 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-all;
+  /* line-height: 23px; */
+  padding-right: 10px;
+}
 
+p {
+  display: block;
+  margin: 0px 0;
+}

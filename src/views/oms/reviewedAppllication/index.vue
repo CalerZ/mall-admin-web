@@ -60,12 +60,6 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button
-        class="btn-add"
-        @click="handleAddApplication()"
-        size="mini">
-        添加
-      </el-button>
     </el-card>
     <div class="table-container" >
       <el-table ref="productTable"
@@ -73,9 +67,11 @@
                 style="width: 100% ;line-height: 15px"
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading"
+                :cell-class-name="tableRowClassName"
+                :header-cell-class-name="tableHeaderClassName"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="申请单单号" width="100" align="center">
+        <el-table-column label="申请单单号" width="200" align="center">
           <template slot-scope="scope">{{scope.row.applicationForm.formCode}}</template>
         </el-table-column>
         <el-table-column label="申请人" width="100" align="center">
@@ -93,10 +89,10 @@
         </el-table-column>
         <el-table-column label="审核状态" align="center">
           <template slot-scope="scope">
-            {{scope.row.applicationForm.applyStatus}}
+            {{scope.row.applicationForm.applyStatus|verifyStatusFilter}}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160" align="center">
+        <el-table-column label="操作" width="180" align="center">
           <template slot-scope="scope">
             <p>
               <el-button
@@ -155,49 +151,10 @@
     name: "reviewedApplicationFormList",
     data() {
       return {
-        editSkuInfo:{
-          dialogVisible:false,
-          productId:null,
-          productSn:'',
-          productAttributeCategoryId:null,
-          stockList:[],
-          productAttr:[],
-          keyword:null
-        },
-        operates: [
-          {
-            label: "商品上架",
-            value: "publishOn"
-          },
-          {
-            label: "商品下架",
-            value: "publishOff"
-          },
-          {
-            label: "设为推荐",
-            value: "recommendOn"
-          },
-          {
-            label: "取消推荐",
-            value: "recommendOff"
-          },
-          {
-            label: "设为新品",
-            value: "newOn"
-          },
-          {
-            label: "取消新品",
-            value: "newOff"
-          },
-          {
-            label: "转移到分类",
-            value: "transferCategory"
-          },
-          {
-            label: "移入回收站",
-            value: "recycle"
-          }
-        ],
+        tableRowClassName:'el-table-column-customer',
+        tableHeaderClassName:'el-table-header-customer',
+
+
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
@@ -240,10 +197,13 @@
     },
     filters: {
       verifyStatusFilter(value) {
-        if (value === 1) {
-          return '审核通过';
-        } else {
-          return '未审核';
+        switch (value) {
+          case 0:
+            return '未审核'
+          case 1:
+            return '审核中'
+          case 2:
+            return '审核通过'
         }
       }
     },
@@ -439,7 +399,7 @@
       },
       handleUpdateProduct(index,row){
         console.log(row.id)
-        this.$router.push({path:'/oms/updateApplication',query:{id:row.applicationForm.id}});
+        this.$router.push({path:'/apply/updateReviewedApplication',query:{id:row.applicationForm.id,isNext:true}});
       },
       handleShowProduct(index,row){
         console.log("handleShowProduct",row);

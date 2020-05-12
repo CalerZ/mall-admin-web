@@ -77,6 +77,8 @@
                 style="width: 100% ;line-height: 15px"
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading"
+                :cell-class-name="tableRowClassName"
+                :header-cell-class-name="tableHeaderClassName"
                 border>
         <el-table-column type="selection" width="60" align="center" ></el-table-column>
         <el-table-column label="申请单单号" width="150" align="center">
@@ -87,12 +89,12 @@
         </el-table-column>
         <el-table-column label="申请日期" align="center">
           <template slot-scope="scope">
-            <p>{{scope.row.applicationForm.applyTime}}</p>
+           {{scope.row.applicationForm.applyTime}}
           </template>
         </el-table-column>
         <el-table-column label="申请人公司" align="center">
           <template slot-scope="scope">
-            <p>{{scope.row.applicationForm.applyOn}}</p> &nbsp;
+            {{scope.row.applicationForm.applyOn}}&nbsp;
           </template>
         </el-table-column>
         <el-table-column label="审核状态" align="center">
@@ -100,7 +102,7 @@
             {{scope.row.applicationForm.applyStatus|verifyStatusFilter}}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="160" align="center">
+        <el-table-column label="操作" width="220" align="center">
           <template slot-scope="scope">
             <p>
               <el-button
@@ -110,6 +112,11 @@
               <el-button v-if="scope.row.applicationForm.applyStatus===0"
                 size="mini"
                 @click="handleUpdateProduct(scope.$index, scope.row)">编辑
+              </el-button>
+              <el-button v-if="scope.row.applicationForm.applyStatus===1"
+                         size="mini"
+                         type="danger"
+                         @click="handleCancelProduct(scope.$index, scope.row)">撤销
               </el-button>
             </p>
           </template>
@@ -134,7 +141,7 @@
 </template>
 <script>
 
-  import {updateApplicationStatus,fetchList ,createApplication,updateApplication,delApplication,delApplications,getApplication,getApplicationProductList,getMyApplicationList,getReviewedApplicationList,formNo} from '@/api/application'
+  import {cancel,updateApplicationStatus,fetchList ,createApplication,updateApplication,delApplication,delApplications,getApplication,getApplicationProductList,getMyApplicationList,getReviewedApplicationList,formNo} from '@/api/application'
 
   const defaultListQuery = {
     keyword: null,
@@ -152,15 +159,8 @@
     name: "applicationFormList",
     data() {
       return {
-        editSkuInfo:{
-          dialogVisible:false,
-          productId:null,
-          productSn:'',
-          productAttributeCategoryId:null,
-          stockList:[],
-          productAttr:[],
-          keyword:null
-        },
+        tableRowClassName:'el-table-column-customer',
+        tableHeaderClassName:'el-table-header-customer',
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
@@ -216,20 +216,33 @@
         } else {
           this.listQuery.productCategoryId = null;
         }
-
       }
     },
     filters: {
       verifyStatusFilter(value) {
-        if (value === 1) {
-          return '审核通过';
-        } else {
-          return '未审核';
+        switch (value) {
+          case 0:
+            return '未审核'
+          case 1:
+            return '审核中'
+          case 2:
+            return '审核通过'
+          case 3:
+            return '已撤销(未审核)'
         }
       }
     },
     methods: {
-
+      handleCancelProduct(index,row){
+        cancel(row.applicationForm.id).then(result => {
+          this.$message({
+            message: '取消成功！',
+            type: 'success',
+            duration: 1000
+          });
+          this.getList();
+        })
+      },
       handleSubmit(){
         if(this.multipleSelection.length<1){
           this.$message({
@@ -239,14 +252,12 @@
           });
           return;
         }
-        debugger
         let ids = this.multipleSelection.map(item=>item.applicationForm.id);
-        console.log(ids)
         updateApplicationStatus(ids).then(result => {
           if(result.data){
             this.$message({
               message: '提交成功！',
-              type: 'warning',
+              type: 'success',
               duration: 1000
             });
             this.getList();
@@ -312,7 +323,7 @@
         });
       },
       handleUpdateProduct(index,row){
-        this.$router.push({path:'/oms/updateApplication',query:{id:row.applicationForm.id}});
+        this.$router.push({path:'/apply/updateApplication',query:{id:row.applicationForm.id}});
       },
       handleShowProduct(index,row){
         console.log("handleShowProduct",row);

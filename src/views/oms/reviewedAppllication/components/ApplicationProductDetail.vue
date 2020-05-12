@@ -1,22 +1,10 @@
 <template>
-  <div style="margin-top: 50px;width: 100%">
+  <div>
     <el-form :model="value" ref="productInfoForm" label-width="120px" style="width: 100%" size="small">
-      <el-card class="operate-container" shadow="never">
-        <i class="el-icon-tickets"></i>
-        <span>物品条目</span>
-        <el-button
-          class="btn-add"
-          @click="handleDelProduct()"
-          size="mini">
-          删除
-        </el-button>
-        <el-button
-          class="btn-add"
-          @click="handleAddProduct()"
-          size="mini">
-          添加
-        </el-button>
-      </el-card>
+      <application-info-detail
+        v-model="value"
+      >
+      </application-info-detail>
       <div class="table-container">
         <el-table ref="productTable"
                   :data="value.applicationProducts"
@@ -27,7 +15,7 @@
                   border>
           <el-table-column fixed type="selection" width="60" align="center"></el-table-column>
           <el-table-column fixed type="index" width="60" label="序号" align="center"></el-table-column>
-          <el-table-column fixed label="编号" width="100" align="center">
+          <el-table-column fixed label="编号" width="200" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.productCode}}</span>
             </template>
@@ -35,6 +23,11 @@
           <el-table-column fixed label="商品名称" width="150" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.productName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column fixed label="状态" width="150" align="center">
+            <template slot-scope="scope">
+              {{scope.row.status|verifyStatusFilter}}
             </template>
           </el-table-column>
           <el-table-column label="类型" align="center">
@@ -62,11 +55,38 @@
               <span>{{scope.row.unit}}</span>
             </template>
           </el-table-column>
-          <!--          <el-table-column label="供应商" width="153" align="center">-->
-          <!--            <template slot-scope="scope">-->
-          <!--              <span>{{scope.row.supplierId}}</span>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
+          <el-table-column label="供应商" width="153" align="center">
+            <!--  <template slot-scope="scope">
+              <div class="input-box">
+                 <el-input size="small" v-model="scope.row.supplierId"></el-input>
+               </div>
+               <template slot-scope="scope">
+                 <el-select
+                   v-model="scope.row.supplierId"
+                   placeholder="请选择供应商">
+                   <el-option
+                     v-for="item in purchaseMethodList"
+                     :key="item.id"
+                     :label="item.name"
+                     :value="item.id">
+                   </el-option>
+                 </el-select>
+               </template>
+             </template>-->
+            <template slot-scope="scope">
+              <el-select
+                v-model="scope.row.purchaseMethod"
+                placeholder="请选择采购方式">
+                <el-option
+                  v-for="item in supplierList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </template>
+
+          </el-table-column>
           <el-table-column label="安全库存" width="120" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.safetyStock}}</span>
@@ -79,56 +99,38 @@
           </el-table-column>
           <el-table-column label="现有库存" width="120" align="center">
             <template slot-scope="scope">
-              <div class="input-box">
-                <el-input size="small" v-model="scope.row.onHandInventory"></el-input>
-              </div>
+              <span>{{scope.row.onHandInventory}}</span>;
             </template>
           </el-table-column>
           <el-table-column label="报告数量" width="120" align="center">
             <template slot-scope="scope">
-              <div class="input-box">
-                <el-input size="small" v-model="scope.row.reportedQuantity"></el-input>
-              </div>
+              <span>{{scope.row.reportedQuantity}}</span>;
             </template>
           </el-table-column>
-          <!--          <el-table-column label="采购方式 " width="120" align="center">-->
-          <!--            <template slot-scope="scope">-->
-          <!--              <span>{{scope.row.purchaseMethod}}</span>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
+          <el-table-column label="采购方式 " width="120" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="scope.row.purchaseMethod"
+                placeholder="请选择采购方式">
+                <el-option
+                  v-for="item in purchaseMethodList"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+              </el-select>
+            </template>
+
+
+          </el-table-column>
           <el-table-column label="生产线人数" width="120" align="center">
             <template slot-scope="scope">
-              <div class="input-box">
-                <el-input size="small" v-model="scope.row.purchaseMethod"></el-input>
-              </div>
+              <span>{{scope.row.purchaseMethod}}</span>
             </template>
           </el-table-column>
-          <!-- <el-table-column label="状态" width="140" align="center">
-             <template slot-scope="scope">
-               <el-switch
-                 @change="handleStatusChange(scope.$index, scope.row)"
-                 :active-value="1"
-                 :inactive-value="0"
-                 v-model="scope.row.status">
-               </el-switch>
-             </template>
-           </el-table-column>-->
         </el-table>
       </div>
-      <el-dialog title="物品列表"
-                 :visible.sync="dialogTableVisible"
-                 custom-class="dialog-css"
-                 width="80%">
-        <product-view-list ref="procedureEdit" :view="true" @selectProduct="handleOk"></product-view-list>
-        <el-row align="center">
-          <el-button type="primary" @click="handleOk" size="small" plain>确定</el-button>
-          <el-button size="small" @click="handleCancel" plain>取消</el-button>
-        </el-row>
-      </el-dialog>
-
       <el-form-item style="text-align: center">
-        <el-button size="medium" @click="handlePrev">上一步，填写申请信息</el-button>
-        <el-button size="medium" @click="handleAddApplication('productInfoForm')">保存申请单</el-button>
         <el-button type="primary" size="medium" @click="handleSubmitApplicaton('productInfoForm')">提交申请单</el-button>
       </el-form-item>
     </el-form>
@@ -140,13 +142,13 @@
   import {fetchAllList as fetchProductUtilList} from '@/api/productUtil'
   import {fetchAllList as fetchProductTypeList} from '@/api/productType'
   import {getApplicationProductList} from '@/api/product'
-
+  import {fetchPurchaseMethodList} from '@/api/product'
 
   import SingleUpload from '@/components/Upload/singleUpload'
   import MultiUpload from '@/components/Upload/multiUpload'
   import Tinymce from '@/components/Tinymce'
   import productList from '@/views/pms/product/index';
-  import ProductViewList from "../productViewList";
+  import ApplicationInfoDetail from './ApplicationInfoDetail';
 
   const defaultListQuery = {
     keyword: null,
@@ -161,7 +163,7 @@
   let than;
   export default {
     name: "ApplicationProductDetail",
-    components: {ProductViewList, SingleUpload, MultiUpload, Tinymce, productList},
+    components: {ApplicationInfoDetail, SingleUpload, MultiUpload, Tinymce, productList},
     props: {
       value: Object,
       isEdit: {
@@ -226,16 +228,28 @@
         },
         multipleSelection: [],
         applicationProducts: [],
-
+        purchaseMethodList: [],
+        supplierList: []
       }
     },
 
     created() {
       //编辑时需要初始化list中的数据
       this.value.applicationProducts = [];
+      this.getPurchaseMethodList();
     },
 
     filters: {
+      verifyStatusFilter(value) {
+        switch (value) {
+          case 0:
+            return '未审核'
+          case 1:
+            return '审核中'
+          case 2:
+            return '审核通过'
+        }
+      },
       getProductTypeName(typeId) {
         let typename = "";
         if (than.productTypeList != null && than.productTypeList.length > 0) {
@@ -249,7 +263,14 @@
       }
     },
     methods: {
-      handleCancel(){
+      //获取采购方式列表
+      getPurchaseMethodList() {
+        fetchPurchaseMethodList().then(response => {
+          this.purchaseMethodList = response.data;
+          this.purchaseMethodList.unshift({id: 0, name: "默认采购方式"})
+        });
+      },
+      handleCancel() {
         this.dialogTableVisible = false;
       },
       handleSelectionChange(val) {
@@ -273,7 +294,6 @@
       },
 
       handleDelProduct() {
-        console.log(this.multipleSelection);
         this.multipleSelection.forEach(pid => {
           let index = this.value.applicationProducts.findIndex(item => item.productId == pid.productId);
           this.value.applicationProducts.splice(index, 1)
@@ -286,9 +306,9 @@
       handleAddApplication(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            if(this.value.applicationProducts.length>0){
+            if (this.value.applicationProducts.length > 0) {
               this.$emit('finishAdd');
-            }else{
+            } else {
               this.$message({
                 message: '请添加物品！',
                 type: 'error',

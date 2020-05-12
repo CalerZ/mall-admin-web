@@ -1,20 +1,20 @@
 <template> 
   <el-card class="form-container" shadow="never">
-    <div style="width: 50%;margin: 0 auto;">
+   <!-- <div style="width: 50%;margin: 0 auto;">
       <el-steps :active="active" finish-status="success" align-center>
         <el-step title="填写申请单信息"></el-step>
         <el-step title="增加物品"></el-step>
       </el-steps>
-    </div>
-    <application-info-detail
+    </div>-->
+<!--    <application-info-detail
       v-show="showStatus[0]"
       v-model="productParam"
       :is-edit="isEdit"
       @nextStep="nextStep">
-    </application-info-detail>
+    </application-info-detail>-->
 
     <application-product-detail
-      v-show="showStatus[1]"
+      v-show="showStatus[0]"
       v-model="productParam"
       :is-edit="isEdit"
       @finishAdd="finishAdd"
@@ -27,8 +27,7 @@
 <script>
   import ApplicationInfoDetail from './ApplicationInfoDetail';
   import ApplicationProductDetail from './ApplicationProductDetail';
-  import {createProduct, getProduct, updateProduct} from '@/api/product';
-  import {createApplication, updateApplication,getApplication} from '@/api/application';
+  import {createApplication, updateApplication,getApplication,finishApplication} from '@/api/application';
 
   const defaultProductParam = {
 
@@ -122,13 +121,12 @@
         }
       },
       finishCommit() {
-        this.$confirm('是否要提交该产品', '提示', {
+        this.$confirm('是否要提交该申请单', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          if (this.isEdit) {
-            updateApplication(this.$route.query.id, this.productParam).then(response => {
+            finishApplication(this.productParam).then(response => {
               this.$message({
                 type: 'success',
                 message: '提交成功',
@@ -136,54 +134,16 @@
               });
               this.$router.back();
             });
-          } else {
-            createApplication(this.productParam).then(response => {
-              this.$message({
-                type: 'success',
-                message: '提交成功',
-                duration: 1000
-              });
-              this.$router.push("/oms/applicationFormList")
-              this.productParam = Object.assign({}, defaultProductParam)
-            });
-          }
         })
       },
 
-      finishAdd() {
-        this.$confirm('是否要保存该产品', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          if (this.isEdit) {
-            updateApplication(this.$route.query.id, this.productParam).then(response => {
-              this.$message({
-                type: 'success',
-                message: '保存成功',
-                duration: 1000
-              });
-              this.$router.back();
-            });
-          } else {
-            createApplication(this.productParam).then(response => {
-              this.$message({
-                type: 'success',
-                message: '保存成功',
-                duration: 1000
-              });
-              this.productParam = Object.assign({}, defaultProductParam)
-              this.$router.push("/oms/applicationFormList")
-            });
-          }
-        })
-      }
+
     }
   }
 </script>
-<style>
+<style scoped>
   .form-container {
-    width: 100%;
+    width: 1200px;
   }
 </style>
 

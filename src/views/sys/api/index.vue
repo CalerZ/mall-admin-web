@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <iframe src="http://127.0.0.1:8088/doc.html" ref="apidoc" id="mobsf" scrolling="no" frameborder="0" style="position:absolute;    height: 800px;width: 97%;"></iframe>
+    <iframe :src="apiURL" ref="apidoc" id="mobsf" scrolling="no" frameborder="0" style="position:absolute;    height: 800px;width: 97%;"></iframe>
   </div>
 </template>
 <script>
@@ -9,7 +9,13 @@
     name:"apidoc",
     data () {
       return {
+        apiURL:'',
+        token:"",
       }
+    },
+    created() {
+      this.token=this.$store.getters.token;
+      this.apiURL=process.env.BASE_API+"doc.html?token="+this.token;
     },
     mounted(){
       /**

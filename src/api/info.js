@@ -3,7 +3,7 @@ export function exportList(data) {
   return request({
     url:'/info/exportExcel',
     method:'post',
-    data:data,
+    params:data,
     responseType: 'arraybuffer' // 表明返回服务器返回的数据类型
   })
 }

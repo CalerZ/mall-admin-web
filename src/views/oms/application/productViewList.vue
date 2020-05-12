@@ -1,5 +1,5 @@
 <template> 
-  <div class="app-container">
+  <div class="app-container" style="    margin-bottom: 30px;">
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -24,32 +24,22 @@
             <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="商品名称/商品编号"></el-input>
           </el-form-item>
           <el-form-item label="物品类型：">
-            <el-select v-model="listQuery.typeId" placeholder="请选择物品类型" clearable>
+            <el-select v-model="listQuery.typeid" placeholder="请选择物品类型" clearable>
               <el-option
-                v-for="item in brandOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="是否发布：">
-            <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
-              <el-option
-                v-for="item in verifyStatusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in productTypeList"
+                :key="item.id"
+                :label="item.typeName"
+                :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="创建人：">
-            <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
+            <el-select v-model="listQuery.createrid" placeholder="全部" clearable>
               <el-option
-                v-for="item in verifyStatusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in userList"
+                :key="item.id"
+                :label="item.username"
+                :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
@@ -63,9 +53,12 @@
                 style="width: 100% ;line-height: 15px"
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading"
+                :cell-class-name="tableRowClassName"
+                :header-cell-class-name="tableHeaderClassName"
                 border>
-        <el-table-column type="selection" width="60" class-name="el-table-column-row-height" align="center"></el-table-column>
-        <el-table-column fixed label="编号" width="100" align="center">
+        <el-table-column type="selection" width="60" class-name="el-table-column-row-height"
+                         align="center"></el-table-column>
+        <el-table-column fixed label="编号" width="200" align="center">
           <template slot-scope="scope">{{scope.row.code}}</template>
         </el-table-column>
         <el-table-column fixed label="商品名称" width="150" align="center">
@@ -73,9 +66,12 @@
             <p>{{scope.row.name}}</p>
           </template>
         </el-table-column>
-        <el-table-column label="类型" align="center">
+        <el-table-column label="类型" width="180" align="center">
           <template slot-scope="scope">
-            {{scope.row.type1}} {{scope.row.type2}}
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+              <el-breadcrumb-item>{{scope.row.type1Name }}</el-breadcrumb-item>
+              <el-breadcrumb-item>{{scope.row.type2Name }}</el-breadcrumb-item>
+            </el-breadcrumb>
           </template>
         </el-table-column>
         <el-table-column label="规格" width="150" align="center">
@@ -90,7 +86,7 @@
         </el-table-column>
         <el-table-column label="单位" width="120" align="center">
           <template slot-scope="scope">
-            {{scope.row.unit}}
+            {{scope.row.utilName}}
           </template>
         </el-table-column>
         <el-table-column label="时间" width="153" align="center">
@@ -100,7 +96,7 @@
         </el-table-column>
         <el-table-column label="创建人" width="120" align="center">
           <template slot-scope="scope">
-            <p>{{scope.row.createOn }}</p>
+            {{scope.row.createrName }}
           </template>
         </el-table-column>
       </el-table>
@@ -125,12 +121,17 @@
     updateDeleteStatus,
     updateNewStatus,
     updateRecommendStatus,
-    updatePublishStatus
+    updatePublishStatus,
+    releaseList
   } from '@/api/product'
   import {fetchList as fetchSkuStockList, update as updateSkuStockList} from '@/api/skuStock'
   import {fetchList as fetchProductAttrList} from '@/api/productAttr'
   import {fetchList as fetchBrandList} from '@/api/brand'
   import {fetchListWithChildren} from '@/api/productType'
+
+  import {fetchAllList as fetchTypeList} from '@/api/productType'
+  import {fetchAllList as getAllMember} from '@/api/login';
+  import {fetchaAllList as getAllSupplier} from '@/api/supplier';
 
   const defaultListQuery = {
     keyword: null,
@@ -152,16 +153,8 @@
     },
     data() {
       return {
-
-        editSkuInfo: {
-          dialogVisible: false,
-          productId: null,
-          productSn: '',
-          productAttributeCategoryId: null,
-          stockList: [],
-          productAttr: [],
-          keyword: null
-        },
+        productTypeList: [],
+        userList: [],
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
@@ -172,12 +165,16 @@
         productCateOptions: [],
         brandOptions: [],
         isView: false,
+
       }
     },
     created() {
       this.getList();
+      this.getProductTypeList();
+      this.getAllUser();
     },
     watch: {
+
       selectProductCateValue: function (newValue) {
         if (newValue != null && newValue.length == 2) {
           this.listQuery.productCategoryId = newValue[1];
@@ -197,6 +194,30 @@
       }
     },
     methods: {
+      getAllUser() {
+        getAllMember().then(response => {
+          this.userList = response.data;
+        })
+      },
+      //获取物品类型
+      getProductTypeList() {
+        fetchTypeList(0).then(response => {
+          this.productTypeList = response.data;
+        })
+      },
+
+      //获取供应商
+      getAllSupplierList() {
+        getAllSupplier(0).then(response => {
+          this.supplierList = response.data;
+        })
+      },
+      tableHeaderClassName({row, rowIndex}) {
+        return 'el-table-header-customer';
+      },
+      tableRowClassName({row, rowIndex}) {
+        return 'el-table-column-customer';
+      },
       //获取从申请单获取物品组件的物品id值
       getVal() {
         return this.multipleSelection;
@@ -212,7 +233,7 @@
       },
       getList() {
         this.listLoading = true;
-        fetchList(this.listQuery).then(response => {
+        releaseList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;
@@ -456,7 +477,7 @@
   }
 </script>
 <style scoped>
-  .el-table-column-row-height{
+  .el-table-column-row-height {
     max-height: 30px;
   }
 </style>

@@ -60,12 +60,6 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
-      <el-button
-        class="btn-add"
-        @click="handleAddApplication()"
-        size="mini">
-        添加
-      </el-button>
     </el-card>
     <div class="table-container" >
       <el-table ref="productTable"
@@ -439,7 +433,7 @@
       },
       handleUpdateProduct(index,row){
         console.log(row.id)
-        this.$router.push({path:'/oms/updateApplication',query:{id:row.applicationForm.id}});
+        this.$router.push({path:'/apply/updateApplication',query:{id:row.applicationForm.id}});
       },
       handleShowProduct(index,row){
         console.log("handleShowProduct",row);

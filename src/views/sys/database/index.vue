@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <iframe src="http://127.0.0.1:8088/sys/dataBase" ref="database" id="mobsf" scrolling="no" frameborder="0" style="position:absolute;    height: 800px;width: 97%;"></iframe>
+    <iframe :src="dbURL" ref="database" id="mobsf" scrolling="no" frameborder="0" style="position:absolute;    height: 800px;width: 97%;"></iframe>
   </div>
 </template>
 <script>
@@ -15,7 +15,7 @@
     },
     created() {
       this.token=this.$store.getters.token;
-      this.url="http://127.0.0.1:8088/sys/dataBase?token="+this.token;
+      this.dbURL=process.env.BASE_API+"druid/sql.html?token="+this.token;
     },
     mounted(){
       /**

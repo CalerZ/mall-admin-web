@@ -1,6 +1,6 @@
 <template>
   <div style="margin-top: 50px">
-    <el-form :model="value"  ref="productInfoForm" label-width="120px" style="width: 720px;margin: 0 auto" size="small">
+    <el-form :model="value" :rules="rules" ref="ApplicationInfoForm" label-width="120px" style="width: 720px;margin: 0 auto" size="small">
       <el-form-item label="申请单单号：">
         <el-breadcrumb separator-class="el-icon-arrow-right">
           <el-input v-model="value.applicationForm.formCode" disabled></el-input>
@@ -25,14 +25,6 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="审核状态："  >
-        <el-switch
-          v-model="value.applicationForm.applyStatus"
-          :active-value="1"
-          :inactive-value="0"
-          disabled>
-        </el-switch>
-      </el-form-item>
       <el-form-item label="描述：">
         <el-input
           type="textarea"
@@ -42,7 +34,7 @@
         </el-input>
       </el-form-item>
       <el-form-item style="text-align: center">
-        <el-button type="primary" size="medium" @click="handleNext('productInfoForm')">下一步，填写物品信息</el-button>
+        <el-button type="primary" size="medium" @click="handleNext('ApplicationInfoForm')">下一步，选择物品信息</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -76,6 +68,11 @@
         },
         hasEditCreated: false,
         memberList:[],
+        rules: {
+          'applicationForm.approver': [
+            {required: true, message: '请输选择审批人', trigger: 'blur'},
+          ],
+        }
 
       };
     },
@@ -126,9 +123,19 @@
         }
         this.hasEditCreated = true;
       },
-      handleNext() {
-        //获取选中分类值
-        this.$emit('nextStep');
+      handleNext(formName) {
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              this.$emit('nextStep');
+            } else {
+              this.$message({
+                message: '验证失败',
+                type: 'error',
+                duration: 1000
+              });
+              return false;
+            }
+          })
       }
     }
   }

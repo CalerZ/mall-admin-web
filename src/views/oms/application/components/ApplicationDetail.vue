@@ -37,7 +37,7 @@
       id            :null ,//
       formCode     :null ,//  单据号
       applyCompany :null ,//  申请公司
-      applyStatus  :null ,//  申请状态
+      applyStatus  :0 ,//  申请状态
       applyOn      :null ,//  申请人
       applyTime    :null ,//  申请时间
       approver      :null ,//  批准人
@@ -128,7 +128,10 @@
           type: 'warning'
         }).then(() => {
           if (this.isEdit) {
-            updateApplication(this.$route.query.id, this.productParam).then(response => {
+            //处理状态为1后进行修改
+            this.productParam.applicationForm.applyStatus=1
+            this.productParam.applicationProducts = this.productParam.applicationProducts.map(item=>{item.status=1;return item});
+            updateApplication(this.productParam).then(response => {
               this.$message({
                 type: 'success',
                 message: '提交成功',
@@ -137,7 +140,7 @@
               this.$router.back();
             });
           } else {
-            createApplication(this.productParam).then(response => {
+            submitApplication(this.productParam).then(response => {
               this.$message({
                 type: 'success',
                 message: '提交成功',
@@ -157,7 +160,7 @@
           type: 'warning'
         }).then(() => {
           if (this.isEdit) {
-            updateApplication(this.$route.query.id, this.productParam).then(response => {
+            updateApplication(this.productParam).then(response => {
               this.$message({
                 type: 'success',
                 message: '保存成功',
@@ -185,7 +188,7 @@
 <style>
   .form-container {
     position: relative;
-    width: 100%;
+    width: 80%;
   }
 </style>
 

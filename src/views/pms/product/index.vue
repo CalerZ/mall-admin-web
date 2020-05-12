@@ -81,8 +81,10 @@
                 style="width: 100% ;line-height: 15px"
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading"
+                :cell-class-name="tableRowClassName"
+                :header-cell-class-name="tableHeaderClassName"
                 border>
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
+        <el-table-column class-name="" type="selection" width="60" align="center"></el-table-column>
         <el-table-column fixed label="编号" width="200" align="center">
           <template slot-scope="scope">{{scope.row.code}}</template>
         </el-table-column>
@@ -126,7 +128,7 @@
         </el-table-column>
         <el-table-column label="创建人" width="120" align="center">
           <template slot-scope="scope">
-            <p>{{scope.row.createrName  }}</p>
+            {{scope.row.createrName  }}
           </template>
         </el-table-column>
         <el-table-column label="供应商" width="120" align="center">
@@ -289,6 +291,12 @@
 
     },
     methods: {
+      tableHeaderClassName({row, rowIndex}){
+        return 'el-table-header-customer';
+      },
+      tableRowClassName({row, rowIndex}) {
+        return 'el-table-column-customer';
+      },
       getAllUser() {
         getAllMember().then(response => {
           this.userList = response.data;
@@ -447,12 +455,8 @@
     }
   }
 </script>
-<style scoped>
+<style>
 
-
-  .table-column {
-    display: none;
-  }
 </style>
 
 

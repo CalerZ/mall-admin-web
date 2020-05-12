@@ -162,7 +162,7 @@
     }
   }
 </script>
-<style>
+<style scoped>
   .form-container {
     width: 800px;
   }

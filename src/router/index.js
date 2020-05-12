@@ -201,17 +201,17 @@ export const asyncRouterMap = [
         meta: {title: '待审核单据', icon: 'product-list'}
       },
       {
+        path: 'updateReviewedApplication',
+        name: 'updateReviewedApplication',
+        component: () => import('@/views/oms/reviewedAppllication/update'),
+        meta: {title: '修改审核单据', icon: 'product-list'},
+        hidden:true
+      },
+      {
         path: 'allApplicationFormList',
         name: 'allApplicationFormList',
         component: () => import('@/views/oms/allAppllication/index'),
         meta: {title: '单据监控', icon: 'product-list'}
-      },
-      {
-        path: 'orderDetail',
-        name: 'orderDetail',
-        component: () => import('@/views/oms/order/orderDetail'),
-        meta: {title: '订单详情'},
-        hidden: true
       },
     ]
   },
@@ -229,15 +229,15 @@ export const asyncRouterMap = [
         meta: {title: '物品信息导出', icon: 'sms-flash'}
       },
       {
-        path: 'import',
-        name: 'import',
-        component: () => import('@/views/sms/flash/index'),
+        path: 'importProduct',
+        name: 'importProduct',
+        component: () => import('@/views/sms/import/index'),
         meta: {title: '导入物品信息', icon: 'sms-flash'}
       },
       {
-        path: 'flash',
-        name: 'flash',
-        component: () => import('@/views/sms/flash/index'),
+        path: 'importApplication',
+        name: 'importApplication',
+        component: () => import('@/views/sms/applyImport/index'),
         meta: {title: '申请单导入', icon: 'sms-flash'}
       },
 
@@ -261,7 +261,7 @@ export const asyncRouterMap = [
         path: 'adduser',
         name: 'adduser',
         component: () => import('@/views/ums/admin/adduser'),
-hidden:true
+        hidden:true
       },
       {
         path: 'role',
@@ -383,6 +383,7 @@ hidden:true
 
 export default new Router({
   // mode: 'history', //后端支持可开
+  // base: '/psdweb',
   scrollBehavior: () => ({y: 0}),
   routes: constantRouterMap
 })

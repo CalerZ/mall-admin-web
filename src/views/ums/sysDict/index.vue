@@ -45,10 +45,10 @@
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="ID" width="200" align="center">
+        <el-table-column label="ID" width="60" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
-        <el-table-column label="父级" width="200" align="center">
+        <el-table-column label="父级" width="100" align="center">
           <template slot-scope="scope">{{scope.row.pid}}</template>
         </el-table-column>
         <el-table-column label="数据类型" align="center">
@@ -66,10 +66,10 @@
         <el-table-column label="是否固定值" align="center">
           <template slot-scope="scope">{{scope.row.isFixed}}</template>
         </el-table-column>
-        <el-table-column label="描述" align="center">
+        <el-table-column label="描述" width="200" align="center">
           <template slot-scope="scope">{{scope.row.dataDesc}}</template>
         </el-table-column>
-        <el-table-column label="更新时间" align="center">
+        <el-table-column label="更新时间" width="200" align="center">
           <template slot-scope="scope">{{scope.row.updateIme}}</template>
         </el-table-column>
         <el-table-column label="状态" width="100" align="center">
@@ -128,6 +128,22 @@
       this.getList();
     },
     methods: {
+
+      handleStatusChange(index, row) {
+        updateStatus({"id":row.id,"status":row.status}).then(response => {
+          this.$message({
+            message: '修改成功',
+            type: 'success',
+            duration: 1000
+          });
+        }).catch(error => {
+          if (row.status === 0) {
+            row.status = 1;
+          } else {
+            row.status = 0;
+          }
+        });
+      },
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
@@ -147,19 +163,19 @@
       handleDelete() {
         if (this.multipleSelection.length < 1) {
           this.$message({
-            message: '未选择供应商！',
+            message: '未选择数据！',
             type: 'warning',
             duration: 1000
           });
           return;
         }
-        this.$confirm('是否要删除该供应商', '提示', {
+        this.$confirm('是否要删除该数据', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           let ids = this.multipleSelection.map(sysDict => sysDict.id);
-          deleteSysDicts(ids).then(response => {
+          dels(ids).then(response => {
             this.$message({
               message: '删除成功',
               type: 'success',
