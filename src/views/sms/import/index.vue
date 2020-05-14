@@ -5,17 +5,41 @@
       <span>物品导入</span>
     </div>
     <el-row :gutter="20">
-      <el-col :span="6"><div class="grid-content bg-purple">物品导入</div></el-col>
-      <el-col :span="8"><div class="grid-content bg-purple"> <el-button type="primary" size="mini" plain>导入</el-button></div></el-col>
+      <el-col :span="6"><div class="grid-content bg-purple">文件上传</div></el-col>
+      <el-col :span="8"><div class="grid-content bg-purple">
+        <el-upload
+          class="upload-demo"
+          action="/info//readExcel"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          :limit="1"
+          :on-exceed="handleExceed"
+          >
+          <el-button size="small" plain>点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
+        </el-upload>
+      </div>
+      </el-col>
     </el-row>
-    <el-row :gutter="20">
+    <el-row :gutter="20" style="margin-top: 10px">
       <el-col :span="6"><div class="grid-content bg-purple">模板</div></el-col>
-      <el-col :span="8"><div class="grid-content bg-purple"><el-button type="primary" size="mini" plain>下载模板</el-button></div></el-col>
+      <el-col :span="8"><div class="grid-content bg-purple">
+        <el-link target="_blank" :href="templateURL" :underline="false" >
+          <el-button size="mini" plain>下载模板</el-button>
+        </el-link>
+      </div>
+      </el-col>
     </el-row>
-    <el-row :gutter="20">
+      <el-row :gutter="20" style="margin-top: 10px">
+        <el-col :span="6"><div class="grid-content bg-purple">操作</div></el-col>
+        <el-col :span="8"><div class="grid-content bg-purple"> <el-button size="mini" plain>导入</el-button></div></el-col>
+      </el-row>
+    <el-row :gutter="20" style="margin-top: 10px">
       <el-col :span="6"><div class="grid-content bg-purple">导入说明</div></el-col>
       <el-col :span="8"><div class="grid-content bg-purple">导入说明xxxxxxxxxxxxxxxxxx</div></el-col>
     </el-row>
+
   </el-card>
     <el-card class="box-card" >
       <div slot="header" class="clearfix">
@@ -95,80 +119,24 @@
     data() {
       than = this;
       return {
-
-
-        editSkuInfo: {
-          dialogVisible: false,
-          productId: null,
-          productSn: '',
-          productAttributeCategoryId: null,
-          stockList: [],
-          productAttr: [],
-          keyword: null
-        },
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
         total: null,
-        listLoading: true,
+        listLoading: false,
         selectProductCateValue: null,
         multipleSelection: [],
         productCateOptions: [],
         brandOptions: [],
         isView: false,
-        pickerOptions: {
-          shortcuts: [
-            {
-              text: '当前月',
-              onClick(picker) {
-                const date = new Date();
-                var nowMonthDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-                const end = new Date(date.getFullYear(), date.getMonth(), nowMonthDay);
-                const start = new Date(date.getFullYear(), date.getMonth(), 1);
-                picker.$emit('pick', [start, end]);
-              }
-            },
-            {
-              text: '最近一周',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: '最近一个月',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                picker.$emit('pick', [start, end]);
-              }
-            }, {
-              text: '最近三个月',
-              onClick(picker) {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                picker.$emit('pick', [start, end]);
-              }
-            },
-
-
-          ]
-        },
-        quarterList: [
-          {id: 1, value: "第一季度"}, {id: 2, value: "第二季度"}, {id: 3, value: "第三季度"}, {id: 4, value: "第四季度"},
-        ],
-        yearList: [
-          {id: 1, value: "上半年"}, {id: 2, value: "下半年"}
-        ],
+        templateURL:'',
         supplierList: []
       }
     },
     created() {
-      this.getList();
-      this.getAllSupplierList();
+      // this.getList();
+      // this.getAllSupplierList();
+      this.templateURL = process.env.BASE_API+"info/downTemplate"
     },
     filters: {
       filterSupplierName(ids) {
@@ -185,6 +153,19 @@
       }
     },
     methods: {
+
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      },
+      beforeRemove(file, fileList) {
+        return this.$confirm(`确定移除 ${ file.name }？`);
+      },
       tableHeaderClassName({row, rowIndex}){
         return 'el-table-header-customer';
       },
