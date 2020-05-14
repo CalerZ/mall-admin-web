@@ -36,7 +36,7 @@
           <el-form-item label="是否发布：">
             <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
               <el-option
-                v-for="item in verifyStatusOptions"
+                v-for="item in 10"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -46,7 +46,7 @@
           <el-form-item label="创建人：">
             <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
               <el-option
-                v-for="item in verifyStatusOptions"
+                v-for="item in 10"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">

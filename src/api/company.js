@@ -8,6 +8,14 @@ export function fetchListAll(params) {
   })
 }
 
+export function companyAll() {
+  return request({
+    url: '/company/list',
+    method: 'get',
+    
+  })
+}
+
 export function fetchList(params) {
   return request({
     url: '/company/list',
