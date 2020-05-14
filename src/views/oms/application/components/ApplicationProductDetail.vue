@@ -24,12 +24,10 @@
                   style="width: 100% ;line-height: 13px"
                   v-loading="listLoading"
                   fit
-                  :cell-class-name="tableRowClassName"
-                  :header-cell-class-name="tableHeaderClassName"
                   border>
           <el-table-column fixed type="selection" width="60" align="center"></el-table-column>
           <el-table-column fixed type="index" width="60" label="序号" align="center"></el-table-column>
-          <el-table-column fixed label="编号" width="200" align="center">
+          <el-table-column fixed label="编号" width="100" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.productCode}}</span>
             </template>
@@ -39,9 +37,10 @@
               <span>{{scope.row.productName}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="类型" width="200" align="center">
+          <el-table-column label="类型" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.type1}}{{scope.row.type2}}</span>
+              <span>{{ scope.row.type1 | getFilterFetch }}</span>
+              <span>{{ scope.row.type2 | getFilterFetch }}</span>
             </template>
           </el-table-column>
           <el-table-column label="规格" align="center">
@@ -54,11 +53,21 @@
               <span>{{scope.row.standard}}</span>
             </template>
           </el-table-column>
+          <el-table-column label="价格" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.price}}</span>
+            </template>
+          </el-table-column>
           <el-table-column label="单位" width="120" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.unit}}</span>
             </template>
           </el-table-column>
+          <!--          <el-table-column label="供应商" width="153" align="center">-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <span>{{scope.row.supplierId}}</span>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
           <el-table-column label="安全库存" width="120" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.safetyStock}}</span>
@@ -83,6 +92,11 @@
               </div>
             </template>
           </el-table-column>
+          <!--          <el-table-column label="采购方式 " width="120" align="center">-->
+          <!--            <template slot-scope="scope">-->
+          <!--              <span>{{scope.row.purchaseMethod}}</span>-->
+          <!--            </template>-->
+          <!--          </el-table-column>-->
           <el-table-column label="生产线人数" width="120" align="center">
             <template slot-scope="scope">
               <div class="input-box">
@@ -90,6 +104,16 @@
               </div>
             </template>
           </el-table-column>
+          <!-- <el-table-column label="状态" width="140" align="center">
+             <template slot-scope="scope">
+               <el-switch
+                 @change="handleStatusChange(scope.$index, scope.row)"
+                 :active-value="1"
+                 :inactive-value="0"
+                 v-model="scope.row.status">
+               </el-switch>
+             </template>
+           </el-table-column>-->
         </el-table>
       </div>
       <el-dialog title="物品列表"
@@ -203,9 +227,6 @@
         },
         multipleSelection: [],
         applicationProducts: [],
-        tableRowClassName:'el-table-column-customer',
-        tableHeaderClassName:'el-table-header-customer',
-
 
       }
     },
@@ -253,6 +274,7 @@
       },
 
       handleDelProduct() {
+        console.log(this.multipleSelection);
         this.multipleSelection.forEach(pid => {
           let index = this.value.applicationProducts.findIndex(item => item.productId == pid.productId);
           this.value.applicationProducts.splice(index, 1)

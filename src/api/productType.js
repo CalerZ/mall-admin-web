@@ -6,6 +6,7 @@ export function fetchList(parentId,params) {
     data:params
   })
 }
+
 export function deleteProductCate(id) {
   return request({
     url:'/ptype/delete/'+id,
