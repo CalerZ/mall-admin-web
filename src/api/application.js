@@ -75,7 +75,7 @@ export function getMyApplicationList(data) {
   return request({
     url:'/application/myApplicationList',
     method:'post',
-    data:data
+    params:data
   })
 }
 export function getReviewedApplicationList(data) {

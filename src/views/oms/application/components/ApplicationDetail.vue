@@ -28,7 +28,7 @@
   import ApplicationInfoDetail from './ApplicationInfoDetail';
   import ApplicationProductDetail from './ApplicationProductDetail';
   import {createProduct, getProduct, updateProduct} from '@/api/product';
-  import {createApplication, updateApplication,getApplication} from '@/api/application';
+  import {createApplication, submitApplication,updateApplication,getApplication} from '@/api/application';
 
   const defaultProductParam = {
 

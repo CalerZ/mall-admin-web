@@ -76,14 +76,16 @@
                 :data="list"
                 style="width: 100% ;line-height: 15px"
                 @selection-change="handleSelectionChange"
+                :cell-class-name="tableRowClassName"
+                :header-cell-class-name="tableHeaderClassName"
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="申请单单号" width="100" align="center">
+        <el-table-column label="申请单单号" width="200" align="center">
           <template slot-scope="scope">{{scope.row.applicationForm.formCode}}</template>
         </el-table-column>
         <el-table-column label="申请人" width="100" align="center">
-          <template slot-scope="scope">{{scope.row.applicationForm.applyOn}}</template>
+          <template slot-scope="scope">{{memberList[scope.row.applicationForm.applyOn]}}</template>
         </el-table-column>
         <el-table-column label="申请日期" align="center">
           <template slot-scope="scope">
@@ -92,12 +94,12 @@
         </el-table-column>
         <el-table-column label="申请人公司" align="center">
           <template slot-scope="scope">
-            <p>{{scope.row.applicationForm.applyOn}}</p> &nbsp;
+            <p>{{companyList[scope.row.applicationForm.applyCompany]}}</p> &nbsp;
           </template>
         </el-table-column>
         <el-table-column label="审核状态" align="center">
           <template slot-scope="scope">
-            {{scope.row.applicationForm.applyStatus}}
+            {{scope.row.applicationForm.applyStatus|verifyStatusFilter}}
           </template>
         </el-table-column>
         <el-table-column label="操作" width="160" align="center">
@@ -145,7 +147,8 @@
   import {fetchList as fetchBrandList} from '@/api/brand'
   import {fetchListWithChildren} from '@/api/productType'
   import {getMyApplicationList as fetchListApplicationForm} from '@/api/application'
-
+  import {fetchAllList as getAllMember} from "@/api/login";
+  import {fetchListAll as getAllCompany} from "@/api/company";
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
@@ -171,6 +174,11 @@
           productAttr:[],
           keyword:null
         },
+
+        memberList:[],
+        companyList:[],
+        tableHeaderClassName:'el-table-header-customer',
+        tableRowClassName:'el-table-column-customer',
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
@@ -218,6 +226,8 @@
     },
     created() {
       this.getList();
+      this.getMember();
+      this.getCompany()
     },
     watch: {
       selectProductCateValue: function (newValue) {
@@ -231,15 +241,27 @@
     },
     filters: {
       verifyStatusFilter(value) {
-        if (value === 1) {
-          return '审核通过';
-        } else {
-          return '未审核';
+        switch (value) {
+          case 0:
+            return '未审核'
+          case 1:
+            return '审核中'
+          case 2:
+            return '审核通过'
         }
       }
     },
     methods: {
-
+      getCompany(){
+        getAllCompany().then(response => {
+          response.data.forEach(item=>{this.companyList[item.id]=item.name})
+        })
+      },
+      getMember() {
+        getAllMember().then(response => {
+          response.data.forEach(item=>{this.memberList[item.id]=item.username})
+        })
+      },
       handleSubmit(){
 
       },

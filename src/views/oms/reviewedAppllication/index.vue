@@ -21,23 +21,12 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="输入搜索：">
-            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="商品名称/商品编号"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="物料名称/物料编号"></el-input>
           </el-form-item>
-
-          <el-form-item label="物品类型：">
-            <el-select v-model="listQuery.typeId" placeholder="请选择物品类型" clearable>
+          <el-form-item label="物料类型：">
+            <el-select v-model="listQuery.typeId" placeholder="请选择物料类型" clearable>
               <el-option
                 v-for="item in brandOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="是否发布：">
-            <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
-              <el-option
-                v-for="item in verifyStatusOptions"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -101,7 +90,7 @@
               </el-button>
               <el-button
                 size="mini"
-                @click="handleUpdateProduct(scope.$index, scope.row)">补充信息
+                @click="handleUpdateProduct(scope.$index, scope.row)">审核
               </el-button>
             </p>
           </template>
@@ -310,7 +299,7 @@
         }
         if(this.multipleSelection==null||this.multipleSelection.length<1){
           this.$message({
-            message: '请选择要操作的商品',
+            message: '请选择要操作的物料',
             type: 'warning',
             duration: 1000
           });

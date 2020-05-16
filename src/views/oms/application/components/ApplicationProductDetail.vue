@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 50px;width: 100%">
+  <div style="margin-top: 20px;width: 100%">
     <el-form :model="value" ref="productInfoForm" label-width="120px" style="width: 100%" size="small">
       <el-card class="operate-container" shadow="never">
         <i class="el-icon-tickets"></i>
@@ -21,34 +21,35 @@
         <el-table ref="productTable"
                   :data="value.applicationProducts"
                   @selection-change="handleSelectionChange"
-                  style="width: 100% ;line-height: 13px"
+                  style="width: 100% ;line-height: 15px"
                   v-loading="listLoading"
-                  fit
+                  :cell-class-name="tableRowClassName"
+                  :header-cell-class-name="tableHeaderClassName"
+                  :fit='true'
                   border>
           <el-table-column fixed type="selection" width="60" align="center"></el-table-column>
           <el-table-column fixed type="index" width="60" label="序号" align="center"></el-table-column>
-          <el-table-column fixed label="编号" width="100" align="center">
+          <el-table-column fixed show-overflow-tooltip="true" label="物料编号" width="200" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.productCode}}</span>
             </template>
           </el-table-column>
-          <el-table-column fixed label="商品名称" width="150" align="center">
+          <el-table-column fixed show-overflow-tooltip="true" label="物料名称" width="150" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.productName}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="类型" align="center">
+          <el-table-column show-overflow-tooltip="true" label="类型" align="center" width="150">
             <template slot-scope="scope">
-              <span>{{ scope.row.type1 | getProductTypeName }}</span>
-              <span>{{ scope.row.type2 | getProductTypeName }}</span>
+             {{ productTypeList[scope.row.type1]   }} >{{ scope.row.type2==null?"":productTypeList[scope.row.type2]  }}
             </template>
           </el-table-column>
-          <el-table-column label="规格" align="center">
+          <el-table-column show-overflow-tooltip="true" label="规格" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.specifications}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="标准" align="center">
+          <el-table-column show-overflow-tooltip="true" label="标准" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.standard}}</span>
             </template>
@@ -60,7 +61,7 @@
           </el-table-column>
           <el-table-column label="单位" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.unit}}</span>
+              <span>{{productUtilList[scope.row.unit]}}</span>
             </template>
           </el-table-column>
           <el-table-column label="安全库存" width="120" align="center">
@@ -100,7 +101,10 @@
       <el-dialog title="物品列表"
                  :visible.sync="dialogTableVisible"
                  custom-class="dialog-css"
-                 width="80%">
+                 width="80%"
+                 lock-scroll
+                 :custom-class="dialogCustmerClass"
+                 height="60%">
         <product-view-list ref="procedureEdit" :view="true" @selectProduct="handleOk"></product-view-list>
         <el-row align="center">
           <el-button type="primary" @click="handleOk" size="small" plain>确定</el-button>
@@ -122,6 +126,7 @@
   import {fetchAllList as fetchProductUtilList} from '@/api/util'
   import {fetchAllList as fetchProductTypeList} from '@/api/productType'
   import {getApplicationProductList} from '@/api/product'
+  import {fetchAllList as getAllProductType} from "@/api/productType";
 
 
   import SingleUpload from '@/components/Upload/singleUpload'
@@ -129,6 +134,7 @@
   import Tinymce from '@/components/Tinymce'
   import productList from '@/views/pms/product/index';
   import ProductViewList from "../productViewList";
+  import {fetchAllList as getAllProductUtil } from "@/api/productUtil";
 
   const defaultListQuery = {
     keyword: null,
@@ -154,7 +160,10 @@
     data() {
 
       return {
+        tableHeaderClassName:'el-table-header-customer',
+        tableRowClassName:'el-table-column-customer',
         keyword: null,
+        productUtilList:[],
         listQuery: Object.assign({}, defaultListQuery),
         dialogTableVisible: false,
         isShow: false,
@@ -208,17 +217,20 @@
         },
         multipleSelection: [],
         applicationProducts: [],
-
+        dialogCustmerClass:'apd-el-dialog__body'
       }
+
     },
 
     created() {
       //编辑时需要初始化list中的数据
       this.value.applicationProducts = [];
+      this.getProductType();
+      this.getProductUtil();
     },
 
     filters: {
-      getProductTypeName(typeId) {
+    /*  getProductTypeName(typeId) {
         let typename = "";
         if (than.productTypeList != null && than.productTypeList.length > 0) {
           than.productTypeList.forEach(item => {
@@ -228,9 +240,19 @@
           })
         }
         return typename;
-      }
+      }*/
     },
     methods: {
+      getProductType() {
+        getAllProductType().then(response => {
+          response.data.forEach(item=>{this.productTypeList[item.id]=item.typeName})
+        })
+      },
+      getProductUtil() {
+        getAllProductUtil().then(response => {
+          response.data.forEach(item=>{this.productUtilList[item.id]=item.utilName})
+        })
+      },
       handleCancel(){
         this.dialogTableVisible = false;
       },
@@ -244,7 +266,15 @@
         let productIdList = [];
         this.products.forEach(item => productIdList.push(item.id));
         getApplicationProductList(productIdList).then(response => {//返回一个列表
-          this.value.applicationProducts = response.data;
+          // this.value.applicationProducts = response.data;
+          response.data.forEach(item=>{
+            // this.value.applicationProducts.forEach(t=>{
+            //   if(t.code==item.code)
+            //
+            // })
+            this.value.applicationProducts.push(item)
+
+          })
           this.dialogTableVisible = false;
         })
       },
@@ -334,6 +364,12 @@
 </script>
 
 <style scoped>
+  .apd-el-dialog__body{
+    padding: 10px 20px;
+    color: #606266;
+    font-size: 14px;
+    word-break: break-all;
+  }
   .littleMarginLeft {
     margin-left: 10px;
   }

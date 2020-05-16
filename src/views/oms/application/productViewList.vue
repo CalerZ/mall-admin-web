@@ -1,5 +1,5 @@
 <template> 
-  <div class="app-container" style="    margin-bottom: 30px;">
+  <div class="pvl-app-container" style="margin-bottom: 30px;">
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -21,24 +21,14 @@
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
           <el-form-item label="输入搜索：">
-            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="商品名称/商品编号"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="物料名称/物料编号"></el-input>
           </el-form-item>
-          <el-form-item label="物品类型：">
-            <el-select v-model="listQuery.typeid" placeholder="请选择物品类型" clearable>
+          <el-form-item label="物料类型：">
+            <el-select v-model="listQuery.typeid" placeholder="请选择物料类型" clearable>
               <el-option
                 v-for="item in productTypeList"
                 :key="item.id"
                 :label="item.typeName"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="创建人：">
-            <el-select v-model="listQuery.createrid" placeholder="全部" clearable>
-              <el-option
-                v-for="item in userList"
-                :key="item.id"
-                :label="item.username"
                 :value="item.id">
               </el-option>
             </el-select>
@@ -51,6 +41,7 @@
       <el-table ref="productTable"
                 :data="list"
                 style="width: 100% ;line-height: 15px"
+                :fit='true'
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading"
                 :cell-class-name="tableRowClassName"
@@ -74,12 +65,12 @@
             </el-breadcrumb>
           </template>
         </el-table-column>
-        <el-table-column label="规格" width="150" align="center">
+        <el-table-column fixed show-overflow-tooltip="true" label="规格" width="150" align="center">
           <template slot-scope="scope">
             {{scope.row.specifications}}
           </template>
         </el-table-column>
-        <el-table-column label="标准" width="150" align="center">
+        <el-table-column fixed show-overflow-tooltip="true" label="标准" width="150" align="center">
           <template slot-scope="scope">
             {{scope.row.standard}}
           </template>
@@ -480,6 +471,10 @@
   .el-table-column-row-height {
     max-height: 30px;
   }
+  .pvl-app-container{
+
+  }
+
 </style>
 
 
