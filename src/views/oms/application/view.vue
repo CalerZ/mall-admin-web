@@ -3,12 +3,12 @@
     <el-card class="form-container" shadow="never">
 
       <div slot="header" class="clearfix">
-        <span style="font-size:20px">{{ productDetail.product.name }}详情信息：</span>
-        <el-button style="float: right; padding: 3px 0" @click="handleEdit" type="text">编辑</el-button>
+        <span style="font-size:20px">{{ product.name }}信息：</span>
+        <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
       </div>
       <el-row>
         <el-col :span="24" align="center" style="line-height: 20px;">
-          <div class="grid-content bg-table-head">物料信息:</div>
+          <div class="grid-content bg-table-head">申请单信息:</div>
         </el-col>
       </el-row>
       <el-row>
@@ -16,15 +16,7 @@
           <div class="grid-content bg-table-head">物料编码:</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.product.code }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9" align="center" style="line-height: 20px;">
-          <div class="grid-content bg-table-head">物料名称:</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.product.name }}</div>
+          <div class="grid-content bg-purple">{{ product.code }}</div>
         </el-col>
       </el-row>
       <el-row>
@@ -33,7 +25,7 @@
         </el-col>
         <el-col :span="15">
           <div class="grid-content bg-purple">
-            {{ productTypeList[productDetail.product.type1]}}>{{productDetail.product.type2==null?"":productTypeList[productDetail.product.type2] }}
+            {{ product.type1Name }}>{{ product.type2Name }}
           </div>
         </el-col>
       </el-row>
@@ -42,7 +34,7 @@
           <div class="grid-content bg-table-head">单位:</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productUtilList[productDetail.product.unit] }}</div>
+          <div class="grid-content bg-purple">{{ product.utilName }}</div>
         </el-col>
       </el-row>
       <el-row>
@@ -50,7 +42,7 @@
           <div class="grid-content bg-table-head">规格:</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.product.specifications }}</div>
+          <div class="grid-content bg-purple">{{ product.specifications }}</div>
         </el-col>
       </el-row>
       <el-row>
@@ -58,7 +50,7 @@
           <div class="grid-content bg-table-head">标准</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.product.standard }}</div>
+          <div class="grid-content bg-purple">{{ product.standard }}</div>
         </el-col>
       </el-row>
       <el-row>
@@ -66,7 +58,7 @@
           <div class="grid-content bg-table-head">价格</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.product.price }}</div>
+          <div class="grid-content bg-purple">{{ product.price }}</div>
         </el-col>
       </el-row>
       <el-row>
@@ -75,7 +67,7 @@
         </el-col>
         <el-col :span="15">
           <div class="grid-content bg-purple">
-            {{ productDetail.product.supplierId | filterSupplierName }}
+            {{ product.supplierId | filterSupplierName }}
           </div>
         </el-col>
       </el-row>
@@ -84,7 +76,7 @@
           <div class="grid-content bg-table-head">创建人</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{memberList[productDetail.product.createOn] }}</div>
+          <div class="grid-content bg-purple">{{ product.createrName }}</div>
         </el-col>
 
       </el-row>
@@ -93,7 +85,7 @@
           <div class="grid-content bg-table-head">时间</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.product.createTime }}</div>
+          <div class="grid-content bg-purple">{{ product.createTime }}</div>
         </el-col>
       </el-row>
       <el-row>
@@ -102,68 +94,93 @@
         </el-col>
         <el-col :span="15">
           <div class="grid-content bg-purple">
-            {{ productDetail.product.status == 1 ? "已发布" : "未发布" }}
+            {{ product.status == 1 ? "已发布" : "未发布" }}
           </div>
         </el-col>
       </el-row>
 
       <!--库存信息-->
       <el-col :span="24" align="center" style="line-height: 20px;">
-        <div ></div>
-      </el-col>
-      <el-col :span="24" align="center" style="line-height: 20px;">
         <div class="grid-content bg-table-head">库存信息:</div>
       </el-col>
       <el-row>
         <el-col :span="9" align="center" style="line-height: 20px;">
-          <div class="grid-content bg-table-head">上月数量:</div>
+          <div class="grid-content bg-table-head">物料编码:</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.stock.lastMonthQuantity }}</div>
+          <div class="grid-content bg-purple">{{ product.code }}</div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9" align="center" style="line-height: 20px;">
-          <div class="grid-content bg-table-head">现有库存:</div>
+          <div class="grid-content bg-table-head">类型:</div>
         </el-col>
         <el-col :span="15">
           <div class="grid-content bg-purple">
-            {{ productDetail.stock.onHandInventory }}
+            {{ product.type1Name }}>{{ product.type2Name }}
           </div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9">
-          <div class="grid-content bg-table-head">本月提报数量:</div>
+          <div class="grid-content bg-table-head">单位:</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.stock.reportedQuantity }}</div>
+          <div class="grid-content bg-purple">{{ product.utilName }}</div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9">
-          <div class="grid-content bg-table-head">安全库存 :</div>
+          <div class="grid-content bg-table-head">规格:</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.stock.safetyStock }}</div>
+          <div class="grid-content bg-purple">{{ product.specifications }}</div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9">
-          <div class="grid-content bg-table-head">生产线人数 :</div>
+          <div class="grid-content bg-table-head">标准</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ productDetail.stock.prodLineMembers  }}</div>
+          <div class="grid-content bg-purple">{{ product.standard }}</div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9">
-          <div class="grid-content bg-table-head">采购方式:</div>
+          <div class="grid-content bg-table-head">价格</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ purchaseMethodList[productDetail.stock.purchaseMethod] }}</div>
+          <div class="grid-content bg-purple">{{ product.price }}</div>
         </el-col>
       </el-row>
+      <el-row>
+        <el-col :span="9">
+          <div class="grid-content bg-table-head">供应商</div>
+        </el-col>
+        <el-col :span="15">
+          <div class="grid-content bg-purple">
+            {{ product.supplierId | filterSupplierName }}
+          </div>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="9">
+          <div class="grid-content bg-table-head">创建人</div>
+        </el-col>
+        <el-col :span="15">
+          <div class="grid-content bg-purple">{{ product.createrName }}</div>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="9">
+          <div class="grid-content bg-table-head">时间</div>
+        </el-col>
+        <el-col :span="15">
+          <div class="grid-content bg-purple">{{ product.createTime }}</div>
+        </el-col>
+      </el-row>
+
+
     </el-card>
 
   </div>
@@ -173,75 +190,28 @@
 
   let than;
   import {fetchaAllList as getAllSupplier} from "@/api/supplier";
-  import {fetchAllList as getAllProductUtil } from "@/api/productUtil";
-  import {fetchList as getAllPurchaseMethod} from "@/api/purchaseMethod";
-  import {fetchAllList as getAllProductType} from "@/api/productType";
-  import {fetchAllList as getAllMember} from "@/api/login";
-
-
-  import {getProduct} from "@/api/product";
-
-
 
   export default {
-    name: "viewProduct",
+    name: "updateProduct",
 
     data() {
       than = this;
       return {
-        productDetail: null,
+        product: null,
         supplierList: [],
-        productId: null,
-        product:{},
-        productUtilList:[],
-        productTypeList:[],
-        purchaseMethodList:[],
-        memberList:[],
       };
     },
     created() {
-      this.productId = this.$route.query.id;
-      //查询
-      this.getProductDetil();
-      this.getProductUtil();
-      this.getProductType();
-      this.getPurchaseMethod();
+      this.product = this.$route.query.product;
       this.getAllSupplierList();
-      this.getMember();
+      console.log(this.product);
     },
     methods: {
-      handleEdit(){
-        this.$router.push({path: '/pms/updateProduct', query: {id: this.productDetail.product.id}});
-      },
-      getMember() {
-        getAllMember().then(response => {
-          response.data.forEach(item=>{this.memberList[item.id]=item.username})
-        })
-      },
-      getPurchaseMethod() {
-        getAllPurchaseMethod().then(response => {
-          response.data.list.forEach(item=>{this.purchaseMethodList[item.id]=item.name})
-        })
-      },
-      getProductType() {
-        getAllProductType(0).then(response => {
-          response.data.forEach(item=>{this.productTypeList[item.id]=item.typeName})
-        })
-      },
-      getProductUtil() {
-        getAllProductUtil().then(response => {
-           response.data.forEach(item=>{this.productUtilList[item.id]=item.utilName})
-        })
-      },
-      getProductDetil() {
-        getProduct(this.productId).then(response => {
-          this.productDetail = response.data
-        })
-      },
       //获取供应商
       getAllSupplierList() {
-        getAllSupplier().then((response) => {
+        getAllSupplier(0).then((response) => {
           this.supplierList = response.data;
+          console.log(this.supplierList);
         });
       },
     },
@@ -259,11 +229,12 @@
         return res.substring(0, res.length - 1);
       }
     },
-
   };
 </script>
 <style scoped>
-
+  .form-container {
+    left: 10%;
+  }
 
   .el-row {
     /*margin-bottom: 20px;*/

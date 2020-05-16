@@ -1,47 +1,59 @@
 <template> 
   <div class="app-container">
-    <el-card class="box-card" >
-    <div slot="header" class="clearfix">
-      <span>物品导入</span>
-    </div>
-    <el-row :gutter="20">
-      <el-col :span="6"><div class="grid-content bg-purple">文件上传</div></el-col>
-      <el-col :span="8"><div class="grid-content bg-purple">
-        <el-upload
-          class="upload-demo"
-          action="/info//readExcel"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          :limit="1"
-          :on-exceed="handleExceed"
-          >
-          <el-button size="small" plain>点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
-        </el-upload>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>物品导入</span>
       </div>
-      </el-col>
-    </el-row>
-    <el-row :gutter="20" style="margin-top: 10px">
-      <el-col :span="6"><div class="grid-content bg-purple">模板</div></el-col>
-      <el-col :span="8"><div class="grid-content bg-purple">
-        <el-link target="_blank" :href="templateURL" :underline="false" >
-          <el-button size="mini" plain>下载模板</el-button>
-        </el-link>
-      </div>
-      </el-col>
-    </el-row>
-      <el-row :gutter="20" style="margin-top: 10px">
-        <el-col :span="6"><div class="grid-content bg-purple">操作</div></el-col>
-        <el-col :span="8"><div class="grid-content bg-purple"> <el-button size="mini" plain>导入</el-button></div></el-col>
-      </el-row>
-    <el-row :gutter="20" style="margin-top: 10px">
-      <el-col :span="6"><div class="grid-content bg-purple">导入说明</div></el-col>
-      <el-col :span="8"><div class="grid-content bg-purple">导入说明xxxxxxxxxxxxxxxxxx</div></el-col>
-    </el-row>
+      <el-row :gutter="20">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">文件上传</div>
+        </el-col>
+        <el-col :span="8">
+          <div class="grid-content bg-purple">
+            <el-upload
+              ref="upload"
+              class="upload-demo"
+              name="uploadFile"
+              :action="importUrl"
+              :headers="hearders"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :before-remove="beforeRemove"
+              :limit="1"
+              :on-exceed="handleExceed"
+              :on-success="handleSuccess"
+              accept=".xlsx,.xls"
+            >
+              <el-button size="small" plain>点击上传</el-button>
+              <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
+            </el-upload>
+          </div>
 
-  </el-card>
-    <el-card class="box-card" >
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" style="margin-top: 10px">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">模板</div>
+        </el-col>
+        <el-col :span="8">
+          <div class="grid-content bg-purple">
+            <el-link target="_blank" :href="templateURL" :underline="false">
+              <el-button size="mini" plain>下载模板</el-button>
+            </el-link>
+          </div>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20" style="margin-top: 10px">
+        <el-col :span="6">
+          <div class="grid-content bg-purple">导入说明</div>
+        </el-col>
+        <el-col :span="8">
+          <div class="grid-content bg-purple">导入说明xxxxxxxxxxxxxxxxxx</div>
+        </el-col>
+      </el-row>
+
+    </el-card>
+    <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span>导入详情</span>
       </div>
@@ -55,26 +67,26 @@
                   :header-cell-class-name="tableHeaderClassName">
           <el-table-column fixed label="序号" align="center" type="index" width="50">
           </el-table-column>
-          <el-table-column  fixed label="物品名称" width="200" align="center">
+          <el-table-column fixed label="物品名称" width="200" align="center">
             <template slot-scope="scope">
-              <p>{{scope.row.productName}}111</p>
+              <p>{{scope.row.productName}}</p>
             </template>
           </el-table-column>
-          <el-table-column label="类型" align="center" >
+          <el-table-column label="类型" align="center">
             <template slot-scope="scope">
               <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item>{{scope.row.type }}</el-breadcrumb-item>
               </el-breadcrumb>
             </template>
           </el-table-column>
-          <el-table-column  label="结果" align="center">
+          <el-table-column label="结果" align="center">
             <template slot-scope="scope">
-              {{scope.row.specifications}}
+              {{scope.row.result}}
             </template>
           </el-table-column>
-          <el-table-column label="时间" align="center">
+          <el-table-column label="信息" align="center">
             <template slot-scope="scope">
-              {{scope.row.standard}}
+              {{scope.row.message}}
             </template>
           </el-table-column>
         </el-table>
@@ -98,6 +110,7 @@
   import {selectExcelData} from '@/api/application'
   import {exportList} from '@/api/info'
   import {fetchaAllList as getAllSupplier} from '@/api/supplier';
+  import store from "../../../store";
 
   let than;
   const defaultListQuery = {
@@ -119,6 +132,7 @@
     data() {
       than = this;
       return {
+        importUrl: "",
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
@@ -129,14 +143,19 @@
         productCateOptions: [],
         brandOptions: [],
         isView: false,
-        templateURL:'',
-        supplierList: []
+        templateURL: '',
+        hearders: {},
+        supplierList: [],
+
+
       }
     },
     created() {
       // this.getList();
       // this.getAllSupplierList();
-      this.templateURL = process.env.BASE_API+"info/downTemplate"
+      this.templateURL = process.env.BASE_API + "info/downTemplate"
+      this.importUrl = process.env.BASE_API + "info/readExcel"
+      this.hearders = {"Authorization":this.$store.getters.token}
     },
     filters: {
       filterSupplierName(ids) {
@@ -153,7 +172,19 @@
       }
     },
     methods: {
+      handleSuccess(response, file, fileList){
+       if(response.code=="200") {
+         this.$message({
+           message: '导入完成！',
+           type: 'success',
+           duration: 1000
+         });
+         this.list = response.data.list;
+         this.total =response.data.total
+         this.$refs["upload"].clearFiles();
+       }
 
+      },
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
@@ -161,12 +192,12 @@
         console.log(file);
       },
       handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
       },
       beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
+        return this.$confirm(`确定移除 ${file.name}？`);
       },
-      tableHeaderClassName({row, rowIndex}){
+      tableHeaderClassName({row, rowIndex}) {
         return 'el-table-header-customer';
       },
       tableRowClassName({row, rowIndex}) {
@@ -264,7 +295,7 @@
     }
   }
 </script>
-<style >
+<style>
   .el-table-column-row-height {
     max-height: 30px;
   }

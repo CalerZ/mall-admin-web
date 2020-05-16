@@ -83,6 +83,7 @@
                 v-loading="listLoading"
                 :cell-class-name="tableRowClassName"
                 :header-cell-class-name="tableHeaderClassName"
+                height="500"
                 border>
         <el-table-column class-name="" type="selection" width="60" align="center"></el-table-column>
         <el-table-column fixed label="编号" width="200" align="center">
@@ -193,7 +194,7 @@
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
-    pageSize: 5,
+    pageSize: 10,
     status: null,
     createrid: null,
     typeid: null,
@@ -395,7 +396,7 @@
       handleShowProduct(index, row) {
         console.log("handleShowProduct", row);
 
-        this.$router.push({path: '/pms/viewProduct', query: {product: row}});
+        this.$router.push({path: '/pms/viewProduct', query: {id: row.id}});
       },
       handleShowVerifyDetail(index, row) {
         console.log("handleShowVerifyDetail", row);

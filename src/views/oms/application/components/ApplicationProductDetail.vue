@@ -39,8 +39,8 @@
           </el-table-column>
           <el-table-column label="类型" align="center">
             <template slot-scope="scope">
-              <span>{{ scope.row.type1 | getFilterFetch }}</span>
-              <span>{{ scope.row.type2 | getFilterFetch }}</span>
+              <span>{{ scope.row.type1 | getProductTypeName }}</span>
+              <span>{{ scope.row.type2 | getProductTypeName }}</span>
             </template>
           </el-table-column>
           <el-table-column label="规格" align="center">
@@ -63,11 +63,6 @@
               <span>{{scope.row.unit}}</span>
             </template>
           </el-table-column>
-          <!--          <el-table-column label="供应商" width="153" align="center">-->
-          <!--            <template slot-scope="scope">-->
-          <!--              <span>{{scope.row.supplierId}}</span>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
           <el-table-column label="安全库存" width="120" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.safetyStock}}</span>
@@ -92,11 +87,6 @@
               </div>
             </template>
           </el-table-column>
-          <!--          <el-table-column label="采购方式 " width="120" align="center">-->
-          <!--            <template slot-scope="scope">-->
-          <!--              <span>{{scope.row.purchaseMethod}}</span>-->
-          <!--            </template>-->
-          <!--          </el-table-column>-->
           <el-table-column label="生产线人数" width="120" align="center">
             <template slot-scope="scope">
               <div class="input-box">
@@ -104,16 +94,7 @@
               </div>
             </template>
           </el-table-column>
-          <!-- <el-table-column label="状态" width="140" align="center">
-             <template slot-scope="scope">
-               <el-switch
-                 @change="handleStatusChange(scope.$index, scope.row)"
-                 :active-value="1"
-                 :inactive-value="0"
-                 v-model="scope.row.status">
-               </el-switch>
-             </template>
-           </el-table-column>-->
+
         </el-table>
       </div>
       <el-dialog title="物品列表"
