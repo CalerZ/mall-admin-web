@@ -32,7 +32,7 @@
           </el-table-column>
           <el-table-column show-overflow-tooltip="true" label="类型" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.type1}}{{scope.row.type2}}</span>
+              <span>{{scope.row.type1Name}} > {{scope.row.type2Name}}</span>
             </template>
           </el-table-column>
           <el-table-column show-overflow-tooltip="true" label="规格" align="center">
@@ -52,7 +52,7 @@
           </el-table-column>
           <el-table-column label="单位" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.unit}}</span>
+              <span>{{scope.row.unitName}}</span>
             </template>
           </el-table-column>
           <el-table-column label="安全库存" width="120" align="center">
@@ -81,7 +81,7 @@
             </template>
           </el-table-column>
           <el-table-column label="供应商" width="153" align="center">
-            <!--  <template slot-scope="scope">
+             <template slot-scope="scope">
               <div class="input-box">
                  <el-input size="small" v-model="scope.row.supplierId"></el-input>
                </div>
@@ -90,14 +90,14 @@
                    v-model="scope.row.supplierId"
                    placeholder="请选择供应商">
                    <el-option
-                     v-for="item in purchaseMethodList"
-                     :key="item.id"
-                     :label="item.name"
-                     :value="item.id">
+                     v-for="item in 10"
+                     :key="item"
+                     :label="item"
+                     :value="item">
                    </el-option>
                  </el-select>
                </template>
-             </template>-->
+             </template>
             <template slot-scope="scope">
               <el-select
                 v-model="scope.row.purchaseMethod"

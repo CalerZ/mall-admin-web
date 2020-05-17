@@ -85,6 +85,16 @@ export function getReviewedApplicationList(data) {
     data:data
   })
 }
+
+export function getfinishApplicationList(data) {
+  return request({
+    url:'/application/finishApplicationList',
+    method:'post',
+    params:data
+  })
+}
+
+
 export function formNo(){
   return request({
     url:'/application/applyFormNo',

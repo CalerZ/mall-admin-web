@@ -117,11 +117,8 @@
     updateRecommendStatus,
     updatePublishStatus
   } from '@/api/product'
-  import {fetchList as fetchSkuStockList,update as updateSkuStockList} from '@/api/skuStock'
-  import {fetchList as fetchProductAttrList} from '@/api/productAttr'
-  import {fetchList as fetchBrandList} from '@/api/brand'
-  import {fetchListWithChildren} from '@/api/productType'
-  import {getReviewedApplicationList as fetchListApplicationForm} from '@/api/application'
+
+  import {getfinishApplicationList as fetchListApplicationForm} from '@/api/application'
   import {fetchAllList as getAllMember} from "@/api/login";
   import {fetchListAll as getAllCompany} from "@/api/company";
   const defaultListQuery = {
@@ -256,12 +253,9 @@
           this.updateDeleteStatus(1,ids);
         });
       },
-      handleUpdateProduct(index,row){
-        console.log(row.id)
-        this.$router.push({path:'/apply/updateReviewedApplication',query:{id:row.applicationForm.id,isNext:true}});
-      },
       handleShowProduct(index,row){
-        console.log("handleShowProduct",row);
+        this.$router.push({path:'/apply/viewApplicationForm',query:{id:row.id,isNext:true}});
+
       },
       handleShowVerifyDetail(index,row){
         console.log("handleShowVerifyDetail",row);

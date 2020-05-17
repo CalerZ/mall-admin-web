@@ -7,11 +7,11 @@
         </el-breadcrumb>
       </el-form-item>
       <el-form-item label="申请人：" >
-        <el-input v-model="value.applicationForm.applyOn"  disabled>
+        <el-input v-model="value.applicationForm.createrName"  disabled>
         </el-input>
       </el-form-item>
       <el-form-item label="申请人公司：" >
-        <el-input v-model="value.applicationForm.applyCompany" disabled></el-input>
+        <el-input v-model="value.applicationForm.companyName" disabled></el-input>
       </el-form-item>
       <el-form-item label="审核人：" disabled prop="applicationForm.approver">
         <el-select

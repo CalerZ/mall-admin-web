@@ -92,11 +92,11 @@
             <p>
               <el-button
                 size="mini"
-                @click="handleShowProduct(scope.$index, scope.row)">查看
+                @click="handleShow(scope.$index, scope.row)">查看
               </el-button>
               <el-button
                 size="mini"
-                @click="handleUpdateProduct(scope.$index, scope.row)">审核
+                @click="handleUpdate(scope.$index, scope.row)">审核
               </el-button>
             </p>
           </template>
@@ -265,12 +265,12 @@
           this.updateDeleteStatus(1,ids);
         });
       },
-      handleUpdateProduct(index,row){
-        console.log(row.id)
-        this.$router.push({path:'/apply/updateReviewedApplication',query:{id:row.applicationForm.id,isNext:true}});
+      handleUpdate(index,row){
+        this.$router.push({path:'/apply/updateReviewedApplication',query:{id:row.id,isNext:true}});
       },
-      handleShowProduct(index,row){
-        console.log("handleShowProduct",row);
+      handleShow(index,row){
+        this.$router.push({path:'/apply/viewApplicationForm',query:{id:row.id,isNext:true}});
+
       },
       handleShowVerifyDetail(index,row){
         console.log("handleShowVerifyDetail",row);
