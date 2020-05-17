@@ -11,16 +11,16 @@
                   @selection-change="handleSelectionChange"
                   style="width: 100% ;line-height: 13px"
                   v-loading="listLoading"
-                  fit
+                  :fit="true"
                   border>
           <el-table-column fixed type="selection" width="60" align="center"></el-table-column>
           <el-table-column fixed type="index" width="60" label="序号" align="center"></el-table-column>
-          <el-table-column fixed label="编号" width="200" align="center">
+          <el-table-column show-overflow-tooltip="true" fixed label="编号" width="200" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.productCode}}</span>
             </template>
           </el-table-column>
-          <el-table-column fixed label="商品名称" width="150" align="center">
+          <el-table-column show-overflow-tooltip="true" fixed label="商品名称" width="150" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.productName}}</span>
             </template>
@@ -30,17 +30,17 @@
               {{scope.row.status|verifyStatusFilter}}
             </template>
           </el-table-column>
-          <el-table-column label="类型" align="center">
+          <el-table-column show-overflow-tooltip="true" label="类型" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.type1}}{{scope.row.type2}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="规格" align="center">
+          <el-table-column show-overflow-tooltip="true" label="规格" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.specifications}}</span>
             </template>
           </el-table-column>
-          <el-table-column label="标准" align="center">
+          <el-table-column show-overflow-tooltip="true" label="标准" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.standard}}</span>
             </template>
@@ -53,6 +53,31 @@
           <el-table-column label="单位" width="120" align="center">
             <template slot-scope="scope">
               <span>{{scope.row.unit}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="安全库存" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.safetyStock}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="上月数量" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.lastMonthQuantity}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="现有库存" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.onHandInventory}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="报告数量" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.reportedQuantity}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="生产线人数" width="120" align="center">
+            <template slot-scope="scope">
+              <span>{{scope.row.purchaseMethod}}</span>
             </template>
           </el-table-column>
           <el-table-column label="供应商" width="153" align="center">
@@ -87,26 +112,6 @@
             </template>
 
           </el-table-column>
-          <el-table-column label="安全库存" width="120" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.safetyStock}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="上月数量" width="120" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.lastMonthQuantity}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="现有库存" width="120" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.onHandInventory}}</span>;
-            </template>
-          </el-table-column>
-          <el-table-column label="报告数量" width="120" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.reportedQuantity}}</span>;
-            </template>
-          </el-table-column>
           <el-table-column label="采购方式 " width="120" align="center">
             <template slot-scope="scope">
               <el-select
@@ -123,15 +128,10 @@
 
 
           </el-table-column>
-          <el-table-column label="生产线人数" width="120" align="center">
-            <template slot-scope="scope">
-              <span>{{scope.row.purchaseMethod}}</span>
-            </template>
-          </el-table-column>
         </el-table>
       </div>
       <el-form-item style="text-align: center">
-        <el-button type="primary" size="medium" @click="handleSubmitApplicaton('productInfoForm')">提交申请单</el-button>
+        <el-button type="primary" size="medium" @click="handleSubmitApplicaton('productInfoForm')">提交审核</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -229,7 +229,7 @@
         multipleSelection: [],
         applicationProducts: [],
         purchaseMethodList: [],
-        supplierList: []
+        supplierList: [1,2,3]
       }
     },
 

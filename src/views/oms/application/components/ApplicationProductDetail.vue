@@ -41,7 +41,7 @@
           </el-table-column>
           <el-table-column show-overflow-tooltip="true" label="类型" align="center" width="150">
             <template slot-scope="scope">
-             {{ productTypeList[scope.row.type1]   }} >{{ scope.row.type2==null?"":productTypeList[scope.row.type2]  }}
+             {{ scope.row.type1Name   }} >{{ scope.row.type2Name==null?"":scope.row.type2Name  }}
             </template>
           </el-table-column>
           <el-table-column show-overflow-tooltip="true" label="规格" align="center">
@@ -61,7 +61,7 @@
           </el-table-column>
           <el-table-column label="单位" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{productUtilList[scope.row.unit]}}</span>
+              <span>{{scope.row.unitName}}</span>
             </template>
           </el-table-column>
           <el-table-column label="安全库存" width="120" align="center">
@@ -225,8 +225,8 @@
     created() {
       //编辑时需要初始化list中的数据
       this.value.applicationProducts = [];
-      this.getProductType();
-      this.getProductUtil();
+      // this.getProductType();
+      // this.getProductUtil();
     },
 
     filters: {

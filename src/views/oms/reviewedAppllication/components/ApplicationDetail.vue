@@ -1,23 +1,9 @@
 <template> 
   <el-card class="form-container" shadow="never">
-   <!-- <div style="width: 50%;margin: 0 auto;">
-      <el-steps :active="active" finish-status="success" align-center>
-        <el-step title="填写申请单信息"></el-step>
-        <el-step title="增加物品"></el-step>
-      </el-steps>
-    </div>-->
-<!--    <application-info-detail
-      v-show="showStatus[0]"
-      v-model="productParam"
-      :is-edit="isEdit"
-      @nextStep="nextStep">
-    </application-info-detail>-->
-
     <application-product-detail
       v-show="showStatus[0]"
       v-model="productParam"
       :is-edit="isEdit"
-      @finishAdd="finishAdd"
       @finishCommit="finishCommit"
       @prevStep="prevStep"
      >

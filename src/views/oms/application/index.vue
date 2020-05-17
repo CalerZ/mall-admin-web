@@ -82,24 +82,24 @@
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="申请单单号" width="200" align="center">
-          <template slot-scope="scope">{{scope.row.applicationForm.formCode}}</template>
+          <template slot-scope="scope">{{scope.row.formCode}}</template>
         </el-table-column>
         <el-table-column label="申请人" width="100" align="center">
-          <template slot-scope="scope">{{memberList[scope.row.applicationForm.applyOn]}}</template>
+          <template slot-scope="scope">{{scope.row.createrName}}</template>
         </el-table-column>
         <el-table-column label="申请日期" align="center">
           <template slot-scope="scope">
-            <p>{{scope.row.applicationForm.applyTime}}</p>
+            {{scope.row.applyTime}}
           </template>
         </el-table-column>
         <el-table-column label="申请人公司" align="center">
           <template slot-scope="scope">
-            <p>{{companyList[scope.row.applicationForm.applyCompany]}}</p> &nbsp;
+            {{scope.row.companyName}}
           </template>
         </el-table-column>
         <el-table-column label="审核状态" align="center">
           <template slot-scope="scope">
-            {{scope.row.applicationForm.applyStatus|verifyStatusFilter}}
+            {{scope.row.applyStatus|verifyStatusFilter}}
           </template>
         </el-table-column>
         <el-table-column label="操作" width="160" align="center">
@@ -107,11 +107,16 @@
             <p>
               <el-button
                 size="mini"
-                @click="handleShowProduct(scope.$index, scope.row)">查看
+                @click="handleShow(scope.$index, scope.row)">查看
               </el-button>
-              <el-button v-if="scope.row.applicationForm.applyStatus===0"
+              <el-button v-if="scope.row.applyStatus===0||scope.row.applyStatus===3"
                 size="mini"
-                @click="handleUpdateProduct(scope.$index, scope.row)">编辑
+                @click="handleUpdate(scope.$index, scope.row)">编辑
+              </el-button>
+              <el-button v-if="scope.row.applyStatus===1"
+                         size="mini"
+                         type="danger"
+                         @click="handleCancel(scope.$index, scope.row)">撤销
               </el-button>
             </p>
           </template>
@@ -142,11 +147,7 @@
     updateRecommendStatus,
     updatePublishStatus
   } from '@/api/product'
-  import {fetchList as fetchSkuStockList,update as updateSkuStockList} from '@/api/skuStock'
-  import {fetchList as fetchProductAttrList} from '@/api/productAttr'
-  import {fetchList as fetchBrandList} from '@/api/brand'
-  import {fetchListWithChildren} from '@/api/productType'
-  import {getMyApplicationList as fetchListApplicationForm} from '@/api/application'
+  import {getMyApplicationList as fetchListApplicationForm,cancel,updateApplicationStatus,delApplications} from '@/api/application'
   import {fetchAllList as getAllMember} from "@/api/login";
   import {fetchListAll as getAllCompany} from "@/api/company";
   const defaultListQuery = {
@@ -226,19 +227,8 @@
     },
     created() {
       this.getList();
-      this.getMember();
-      this.getCompany()
     },
-    watch: {
-      selectProductCateValue: function (newValue) {
-        if (newValue != null && newValue.length == 2) {
-          this.listQuery.productCategoryId = newValue[1];
-        } else {
-          this.listQuery.productCategoryId = null;
-        }
 
-      }
-    },
     filters: {
       verifyStatusFilter(value) {
         switch (value) {
@@ -248,10 +238,29 @@
             return '审核中'
           case 2:
             return '审核通过'
+          case 3:
+            return "已撤销(未审核)"
         }
       }
     },
     methods: {
+      handleCancel(index, row){
+        this.$confirm('是否要进行撤销', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(()=>{
+          cancel(row.id).then(response=>{
+            this.$message({
+              message: '撤销成功',
+              type: 'success',
+              duration: 1000
+            });
+            this.getList()
+          })
+        })
+
+      },
       getCompany(){
         getAllCompany().then(response => {
           response.data.forEach(item=>{this.companyList[item.id]=item.name})
@@ -264,14 +273,22 @@
       },
       handleSubmit(){
 
-      },
-      getProductSkuSp(row, index) {
-        let spData = JSON.parse(row.spData);
-        if(spData!=null&&index<spData.length){
-          return spData[index].value;
-        }else{
-          return null;
-        }
+        this.$confirm('是否要提交申请', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(()=>{
+          let ids = this.multipleSelection.map(item=>item.id)
+          updateApplicationStatus(ids).then(result => {
+            this.$message({
+              message: '提交成功',
+              type: 'success',
+              duration: 1000
+            });
+            this.getList()
+          })
+        })
+
       },
       getList() {
         this.listLoading = true;
@@ -281,136 +298,12 @@
           this.total = response.data.total;
         });
       },
-      getBrandList() {
-        fetchBrandList({pageNum: 1, pageSize: 100}).then(response => {
-          this.brandOptions = [];
-          let brandList = response.data.list;
-          for (let i = 0; i < brandList.length; i++) {
-            this.brandOptions.push({label: brandList[i].name, value: brandList[i].id});
-          }
-        });
-      },
-      getProductCateList() {
-        fetchListWithChildren().then(response => {
-          let list = response.data;
-          this.productCateOptions = [];
-          for (let i = 0; i < list.length; i++) {
-            let children = [];
-            if (list[i].children != null && list[i].children.length > 0) {
-              for (let j = 0; j < list[i].children.length; j++) {
-                children.push({label: list[i].children[j].name, value: list[i].children[j].id});
-              }
-            }
-            this.productCateOptions.push({label: list[i].name, value: list[i].id, children: children});
-          }
-        });
-      },
-      handleShowSkuEditDialog(index,row){
-        this.editSkuInfo.dialogVisible=true;
-        this.editSkuInfo.productId=row.id;
-        this.editSkuInfo.productSn=row.productSn;
-        this.editSkuInfo.productAttributeCategoryId = row.productAttributeCategoryId;
-        this.editSkuInfo.keyword=null;
-        fetchSkuStockList(row.id,{keyword:this.editSkuInfo.keyword}).then(response=>{
-          this.editSkuInfo.stockList=response.data;
-        });
-        if(row.productAttributeCategoryId!=null){
-          fetchProductAttrList(row.productAttributeCategoryId,{type:0}).then(response=>{
-            this.editSkuInfo.productAttr=response.data.list;
-          });
-        }
-      },
-      handleSearchEditSku(){
-        fetchSkuStockList(this.editSkuInfo.productId,{keyword:this.editSkuInfo.keyword}).then(response=>{
-          this.editSkuInfo.stockList=response.data;
-        });
-      },
-      handleEditSkuConfirm(){
-        if(this.editSkuInfo.stockList==null||this.editSkuInfo.stockList.length<=0){
-          this.$message({
-            message: '暂无sku信息',
-            type: 'warning',
-            duration: 1000
-          });
-          return
-        }
-        this.$confirm('是否要进行修改', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(()=>{
-          updateSkuStockList(this.editSkuInfo.productId,this.editSkuInfo.stockList).then(response=>{
-            this.$message({
-              message: '修改成功',
-              type: 'success',
-              duration: 1000
-            });
-            this.editSkuInfo.dialogVisible=false;
-          });
-        });
-      },
       handleSearchList() {
         this.listQuery.pageNum = 1;
         this.getList();
       },
       handleAddApplication() {
         this.$router.push({path:'/apply/addApplication'});
-      },
-      handleBatchOperate() {
-        if(this.operateType==null){
-          this.$message({
-            message: '请选择操作类型',
-            type: 'warning',
-            duration: 1000
-          });
-          return;
-        }
-        if(this.multipleSelection==null||this.multipleSelection.length<1){
-          this.$message({
-            message: '请选择要操作的商品',
-            type: 'warning',
-            duration: 1000
-          });
-          return;
-        }
-        this.$confirm('是否要进行该批量操作?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let ids=[];
-          for(let i=0;i<this.multipleSelection.length;i++){
-            ids.push(this.multipleSelection[i].id);
-          }
-          switch (this.operateType) {
-            case this.operates[0].value:
-              this.updatePublishStatus(1,ids);
-              break;
-            case this.operates[1].value:
-              this.updatePublishStatus(0,ids);
-              break;
-            case this.operates[2].value:
-              this.updateRecommendStatus(1,ids);
-              break;
-            case this.operates[3].value:
-              this.updateRecommendStatus(0,ids);
-              break;
-            case this.operates[4].value:
-              this.updateNewStatus(1,ids);
-              break;
-            case this.operates[5].value:
-              this.updateNewStatus(0,ids);
-              break;
-            case this.operates[6].value:
-              break;
-            case this.operates[7].value:
-              this.updateDeleteStatus(1,ids);
-              break;
-            default:
-              break;
-          }
-          this.getList();
-        });
       },
       handleSizeChange(val) {
         this.listQuery.pageNum = 1;
@@ -443,23 +336,28 @@
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
       },
-      handleDelete(index, row){
+      handleDelete(){
         this.$confirm('是否要进行删除操作?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let ids = [];
-          ids.push(row.id);
-          this.updateDeleteStatus(1,ids);
+          let ids = this.multipleSelection.map(item=>item.id)
+          delApplications(ids).then(response => {
+            this.$message({
+              message: '删除成功',
+              type: 'success',
+              duration: 1000
+            });
+          });
+          this.getList();
         });
       },
-      handleUpdateProduct(index,row){
-        console.log(row.id)
-        this.$router.push({path:'/oms/updateApplication',query:{id:row.applicationForm.id}});
+      handleUpdate(index,row){
+        this.$router.push({path:'/apply/updateApplication',query:{id:row.id}});
       },
-      handleShowProduct(index,row){
-        console.log("handleShowProduct",row);
+      handleShow(index,row){
+        this.$router.push({path:'/apply/viewApplicationForm',query:{id:row.id}});
       },
       handleShowVerifyDetail(index,row){
         console.log("handleShowVerifyDetail",row);

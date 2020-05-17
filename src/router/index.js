@@ -201,10 +201,24 @@ export const asyncRouterMap = [
         meta: {title: '待审核单据', icon: 'product-list'}
       },
       {
+        path: 'finishApplicationFormList',
+        name: 'finishApplicationFormList',
+        component: () => import('@/views/oms/reviewedAppllication/finish'),
+        meta: {title: '查看审核记录'},
+        hidden: true
+      },
+      {
         path: 'updateReviewedApplication',
         name: 'updateReviewedApplication',
         component: () => import('@/views/oms/reviewedAppllication/update'),
         meta: {title: '修改审核单据', icon: 'product-list'},
+        hidden:true
+      },
+      {
+        path: 'viewApplicationForm',
+        name: 'viewApplicationForm',
+        component: () => import('@/views/oms/application/view'),
+        meta: {title: '单据详情'},
         hidden:true
       },
       {

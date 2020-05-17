@@ -130,7 +130,18 @@
           if (this.isEdit) {
             //处理状态为1后进行修改
             this.productParam.applicationForm.applyStatus=1
-            this.productParam.applicationProducts = this.productParam.applicationProducts.map(item=>{item.status=1;return item});
+            delete this.productParam.applicationForm.companyName;
+            delete this.productParam.applicationForm.createrName;
+            delete this.productParam.applicationForm.approverName;
+            this.productParam.applicationProducts = this.productParam.applicationProducts.map(item=>{item.status=1;
+            delete item.type1Name;
+              delete item.type1Name;
+              delete item.type2Name;
+              delete item.unitName;
+              delete item.supplierName;
+              delete item.recordOnName;
+              delete item.purchaseMethodName;
+              return item});
             updateApplication(this.productParam).then(response => {
               this.$message({
                 type: 'success',
@@ -160,6 +171,19 @@
           type: 'warning'
         }).then(() => {
           if (this.isEdit) {
+            delete this.productParam.applicationForm.companyName;
+            delete this.productParam.applicationForm.createrName;
+            delete this.productParam.applicationForm.approverName;
+            this.productParam.applicationProducts = this.productParam.applicationProducts.map(item=>{
+              delete item.type1Name;
+              delete item.type1Name;
+              delete item.type2Name;
+              delete item.unitName;
+              delete item.supplierName;
+              delete item.recordOnName;
+              delete item.purchaseMethodName;
+              return item
+            });
             updateApplication(this.productParam).then(response => {
               this.$message({
                 type: 'success',

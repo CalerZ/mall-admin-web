@@ -7,11 +7,11 @@
         </el-breadcrumb>
       </el-form-item>
       <el-form-item label="申请人：" >
-        <el-input v-model="username"  disabled>
+        <el-input v-model="value.applicationForm.applyOn"  disabled>
         </el-input>
       </el-form-item>
       <el-form-item label="申请人公司：" >
-        <el-input v-model="company" disabled></el-input>
+        <el-input v-model="value.applicationForm.applyCompany" disabled></el-input>
       </el-form-item>
       <el-form-item label="审核人：" disabled prop="applicationForm.approver">
         <el-select
@@ -26,15 +26,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-    <!--  <el-form-item label="审核状态："  >
-        <el-switch
-          disabled
-          v-model="value.applicationForm.applyStatus"
-          :active-value="1"
-          :inactive-value="0"
-          disabled>
-        </el-switch>
-      </el-form-item>-->
+
       <el-form-item label="描述：" disabled>
         <el-input
           disabled
@@ -44,9 +36,7 @@
           v-model="value.applicationForm.description">
         </el-input>
       </el-form-item>
-<!--      <el-form-item style="text-align: center">
-        <el-button type="primary" size="medium" @click="handleNext('productInfoForm')">下一步，填写物品信息</el-button>
-      </el-form-item>-->
+
     </el-form>
   </div>
 </template>
@@ -58,7 +48,6 @@
   let than;
   export default {
     name: "ApplicationInfoDetail",
-    components: {Tinymce},
     props: {
       value: Object,
       isEdit: {
@@ -78,40 +67,18 @@
         },
         hasEditCreated: false,
         memberList:[],
-
+        members:[],
       };
     },
     created() {
       this.getAllUser();
-      this.computeFormCode();
-      this.value.applicationForm.applyOn = this.$store.getters.userid;
-      this.value.applicationForm.applyCompany = this.$store.getters.company.id;
-      console.log(this.$store.getters)
-    },
-    filters:{
-      userNameFilter(id){
-        return this.$store.getters.name;
-      }
-    },
-    computed:{
-      username(){
-        return   this.$store.getters.name;
-      },
-      company(){
-        return this.$store.getters.company.name;
-      },
     },
     methods: {
-      //后台生成流水号
-      computeFormCode(){
-        let date = new Date();
-        console.log(date.toLocaleString())
-        this.value.applicationForm.formCode =  'TAP-'+date.getFullYear()+date.getMonth()+'-'+'0001';
-      },
 
       getAllUser(){
         getAllMember().then(response => {
          this.memberList =  response.data;
+          response.data.forEach(item=>{this.members[item.id]=item.username})
         })
       },
 

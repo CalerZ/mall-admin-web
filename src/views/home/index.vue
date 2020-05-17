@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="address-layout">
+   <!-- <div class="address-layout">
       <el-row :gutter="20">
         <el-col :span="6">
           <div class="out-border">
@@ -51,21 +51,21 @@
             <div class="total-value">￥5000.00</div>
           </div>
         </el-col>
-        <!--<el-col :span="6">-->
-          <!--<div class="total-frame">-->
-            <!--<svg-icon icon-class="total-week" class="total-icon">-->
-            <!--</svg-icon>-->
-            <!--<div class="total-title">近7天销售总额</div>-->
-            <!--<div class="total-value">￥50000.00</div>-->
-          <!--</div>-->
-        <!--</el-col>-->
+        &lt;!&ndash;<el-col :span="6">&ndash;&gt;
+          &lt;!&ndash;<div class="total-frame">&ndash;&gt;
+            &lt;!&ndash;<svg-icon icon-class="total-week" class="total-icon">&ndash;&gt;
+            &lt;!&ndash;</svg-icon>&ndash;&gt;
+            &lt;!&ndash;<div class="total-title">近7天销售总额</div>&ndash;&gt;
+            &lt;!&ndash;<div class="total-value">￥50000.00</div>&ndash;&gt;
+          &lt;!&ndash;</div>&ndash;&gt;
+        &lt;!&ndash;</el-col>&ndash;&gt;
       </el-row>
     </div>
     <el-card class="mine-layout">
       <div style="text-align: center">
         <img width="150px" height="150px" src="../../assets/images/login.png">
       </div>
-      
+
     </el-card>
     <div class="un-handle-layout">
       <div class="layout-title">待处理事务</div>
@@ -131,7 +131,17 @@
           </el-col>
         </el-row>
       </div>
-    </div>
+    </div>-->
+    <template>
+      <el-carousel :interval="4000" type="card" height="200px">
+        <el-carousel-item v-for="item in 6" :key="item">
+          <h3 class="medium">{{ item }}</h3>
+        </el-carousel-item>
+      </el-carousel>
+    </template>
+    <el-calendar v-model="value">
+    </el-calendar>
+
     <div class="overview-layout">
       <el-row :gutter="20">
         <el-col :span="12">
@@ -272,6 +282,7 @@
     name: 'home',
     data() {
       return {
+        value:new Date(),
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -449,5 +460,20 @@
   .address-content{
     padding: 20px;
     font-size: 18px
+  }
+  .el-carousel__item h3 {
+    color: #475669;
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 200px;
+    margin: 0;
+  }
+
+  .el-carousel__item:nth-child(2n) {
+    background-color: #99a9bf;
+  }
+
+  .el-carousel__item:nth-child(2n+1) {
+    background-color: #d3dce6;
   }
 </style>

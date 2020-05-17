@@ -307,17 +307,12 @@
         })
       },
       exportData() {
-        // let ids = this.multipleSelection.map(item => item.id);
-        debugger
         exportList(this.listQuery).then(result => {
-          // console.log(result)
-
-          // debugger
           const data = new Blob([result], {type: 'application/vnd.ms-excel'})
           const url = URL.createObjectURL(data)
           const a = document.createElement('a')
           a.href = url
-          a.download = result.data
+          a.download = "xxx月或者2020季度"
           a.click()
           URL.revokeObjectURL(url)
 

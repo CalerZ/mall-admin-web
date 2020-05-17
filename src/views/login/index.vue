@@ -40,7 +40,7 @@
           <el-button style="width:45%;height:25%;font-size:24px" type="success" :loading="loading" @click.native.prevent="handleLogin">
             登录
           </el-button>
-         
+
         </el-form-item>
       </el-form>
     </el-card>
@@ -51,7 +51,7 @@
       :show-close="false"
       :center="true"
       width="30%">
-      
+
       <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="dialogConfirm" style="width:30%;">确定</el-button>
       </span>
@@ -126,8 +126,8 @@
             this.loading = true;
             this.$store.dispatch('Login', this.loginForm).then(() => {
               this.loading = false;
-              setCookie("username",this.loginForm.username,15);
-              setCookie("password",this.loginForm.password,15);
+              // setCookie("username",this.loginForm.username,15);
+              // setCookie("password",this.loginForm.password,15);
               this.$router.push({path: '/'})
             }).catch(() => {
               this.loading = false
@@ -160,7 +160,7 @@
     right: 0;
     width: 360px;
     margin: 140px auto 0 ;
-    
+
     opacity: 0.9;
   }
 
@@ -171,9 +171,9 @@
   .login-center-layout {
     background: #409EFF;
     width:100%;
-   
-  
-   
+
+
+
   }
 </style>
 

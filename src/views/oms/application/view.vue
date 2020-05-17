@@ -3,7 +3,7 @@
     <el-card class="form-container" shadow="never">
 
       <div slot="header" class="clearfix">
-        <span style="font-size:20px">{{ product.name }}信息：</span>
+        <span style="font-size:20px">{{ application.applicationForm.formCode }}信息：</span>
         <el-button style="float: right; padding: 3px 0" type="text">编辑</el-button>
       </div>
       <el-row>
@@ -13,170 +13,52 @@
       </el-row>
       <el-row>
         <el-col :span="9" align="center" style="line-height: 20px;">
-          <div class="grid-content bg-table-head">物料编码:</div>
+          <div class="grid-content bg-table-head">申请单编号:</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.code }}</div>
+          <div class="grid-content bg-purple">{{ application.applicationForm.formCode }}</div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9" align="center" style="line-height: 20px;">
-          <div class="grid-content bg-table-head">类型:</div>
+          <div class="grid-content bg-table-head">申请人:</div>
         </el-col>
         <el-col :span="15">
           <div class="grid-content bg-purple">
-            {{ product.type1Name }}>{{ product.type2Name }}
+            {{ application.applicationForm.createrName }}
           </div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9">
-          <div class="grid-content bg-table-head">单位:</div>
+          <div class="grid-content bg-table-head">申请人公司:</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.utilName }}</div>
+          <div class="grid-content bg-purple">{{ application.applicationForm.companyName }}</div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9">
-          <div class="grid-content bg-table-head">规格:</div>
+          <div class="grid-content bg-table-head">申请时间:</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.specifications }}</div>
+          <div class="grid-content bg-purple">{{application.applicationForm.applyTime }}</div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9">
-          <div class="grid-content bg-table-head">标准</div>
+          <div class="grid-content bg-table-head">申请状态：</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.standard }}</div>
+          <div class="grid-content bg-purple">{{ application.applicationForm.applyStatus }}</div>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="9">
-          <div class="grid-content bg-table-head">价格</div>
+          <div class="grid-content bg-table-head">审核人：</div>
         </el-col>
         <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.price }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">供应商</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">
-            {{ product.supplierId | filterSupplierName }}
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">创建人</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.createrName }}</div>
-        </el-col>
-
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">时间</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.createTime }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">发布状态</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">
-            {{ product.status == 1 ? "已发布" : "未发布" }}
-          </div>
-        </el-col>
-      </el-row>
-
-      <!--库存信息-->
-      <el-col :span="24" align="center" style="line-height: 20px;">
-        <div class="grid-content bg-table-head">库存信息:</div>
-      </el-col>
-      <el-row>
-        <el-col :span="9" align="center" style="line-height: 20px;">
-          <div class="grid-content bg-table-head">物料编码:</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.code }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9" align="center" style="line-height: 20px;">
-          <div class="grid-content bg-table-head">类型:</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">
-            {{ product.type1Name }}>{{ product.type2Name }}
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">单位:</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.utilName }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">规格:</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.specifications }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">标准</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.standard }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">价格</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.price }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">供应商</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">
-            {{ product.supplierId | filterSupplierName }}
-          </div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">创建人</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.createrName }}</div>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="9">
-          <div class="grid-content bg-table-head">时间</div>
-        </el-col>
-        <el-col :span="15">
-          <div class="grid-content bg-purple">{{ product.createTime }}</div>
+          <div class="grid-content bg-purple">{{ application.applicationForm.approverName  }}</div>
         </el-col>
       </el-row>
 
@@ -186,27 +68,31 @@
   </div>
 </template>
 <script>
-  import ProductDetail from "./components/ProductDetail";
-
   let than;
   import {fetchaAllList as getAllSupplier} from "@/api/supplier";
+  import {getApplication } from "@/api/application";
 
   export default {
-    name: "updateProduct",
+    name: "viewApplicationForm",
 
     data() {
       than = this;
       return {
-        product: null,
+        application: null,
         supplierList: [],
       };
     },
     created() {
-      this.product = this.$route.query.product;
-      this.getAllSupplierList();
-      console.log(this.product);
+      this.getApplicationForm(this.$route.query.id);
     },
     methods: {
+      //获取供应商
+      getApplicationForm(id) {
+        getApplication(id).then((response) => {
+          this.application = response.data;
+          console.log(this.application);
+        });
+      },
       //获取供应商
       getAllSupplierList() {
         getAllSupplier(0).then((response) => {
