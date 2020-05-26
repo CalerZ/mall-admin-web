@@ -8,11 +8,12 @@
         </el-breadcrumb>
       </el-form-item>
       <el-form-item label="申请人：">
-        <el-input v-model="value.applicationForm.createrName"  disabled></el-input>
-        </el-input>
+        <el-input v-model="value.applicationForm.createrName" v-show="isEdit" disabled></el-input>
+        <el-input v-model="username" v-show="!isEdit"  disabled></el-input>
       </el-form-item>
       <el-form-item label="申请人公司：">
-        <el-input v-model="value.applicationForm.companyName"  disabled></el-input>
+        <el-input v-model="value.applicationForm.companyName" v-show="isEdit"  disabled></el-input>
+        <el-input v-model="company"  v-show="!isEdit" disabled></el-input>
       </el-form-item>
       <el-form-item label="审核人：" prop="applicationForm.approver">
         <el-select

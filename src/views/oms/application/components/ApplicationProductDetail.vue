@@ -31,17 +31,17 @@
           <el-table-column fixed type="index" width="60" label="序号" align="center"></el-table-column>
           <el-table-column fixed show-overflow-tooltip="true" label="物料编号" width="200" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.productCode}}</span>
+              <span>{{scope.row.code}}</span>
             </template>
           </el-table-column>
           <el-table-column fixed show-overflow-tooltip="true" label="物料名称" width="150" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.productName}}</span>
+              <span>{{scope.row.name}}</span>
             </template>
           </el-table-column>
           <el-table-column show-overflow-tooltip="true" label="类型" align="center" width="150">
             <template slot-scope="scope">
-             {{ scope.row.type1Name   }} >{{ scope.row.type2Name==null?"":scope.row.type2Name  }}
+             {{ scope.row.productType1.typeName   }} >{{ scope.row.productType2!=null?scope.row.productType2.typeName :"" }}
             </template>
           </el-table-column>
           <el-table-column show-overflow-tooltip="true" label="规格" align="center">
@@ -61,37 +61,37 @@
           </el-table-column>
           <el-table-column label="单位" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.unitName}}</span>
+              <span>{{scope.row.productUtil.utilName}}</span>
             </template>
           </el-table-column>
           <el-table-column label="安全库存" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.safetyStock}}</span>
+              <span>{{scope.row.stock.safetyStock}}</span>
             </template>
           </el-table-column>
           <el-table-column label="上月数量" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.lastMonthQuantity}}</span>
+              <span>{{scope.row.stock.lastMonthQuantity}}</span>
             </template>
           </el-table-column>
           <el-table-column label="现有库存" width="120" align="center">
             <template slot-scope="scope">
               <div class="input-box">
-                <el-input size="small" v-model="scope.row.onHandInventory"></el-input>
+                <el-input size="small" v-model="scope.row.stock.onHandInventory"></el-input>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="报告数量" width="120" align="center">
             <template slot-scope="scope">
               <div class="input-box">
-                <el-input size="small" v-model="scope.row.reportedQuantity"></el-input>
+                <el-input size="small" v-model="scope.row.stock.reportedQuantity"></el-input>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="生产线人数" width="120" align="center">
             <template slot-scope="scope">
               <div class="input-box">
-                <el-input size="small" v-model="scope.row.purchaseMethod"></el-input>
+                <el-input size="small" v-model="scope.row.stock.prodLineMembers"></el-input>
               </div>
             </template>
           </el-table-column>
@@ -224,7 +224,13 @@
 
     created() {
       //编辑时需要初始化list中的数据
-      this.value.applicationProducts = [];
+
+      if (this.isEdit) {
+
+      }else{
+
+        this.value.applicationProducts = [];
+      }
       // this.getProductType();
       // this.getProductUtil();
     },
@@ -272,6 +278,38 @@
             //   if(t.code==item.code)
             //
             // })
+
+
+
+            // let applicationProduct ={
+            //      id: item.id,//
+            //     productId: item.id,//  物品id
+            //     productCode: item.code,//  物品编码
+            //     type1: item.productType1.id,//  一级类型
+            //     type2: item.productType2.id,//  二级类型
+            //     productName: item.name,//  物品名称
+            //     mainid: null,//  申请单id
+            //     description: item.description,//  物品描述
+            //     specifications: item.specifications,//  规格
+            //     unit: item.productUtil.id,//  单位
+            //     price: item.price,//  价格
+            //     standard: item.standard,//  标准
+            //     supplierId: null,//  供应商
+            //     safetyStock: item.stock.safetyStock,//  安全库存
+            //     lastMonthQuantity: item.stock.lastMonthQuantity,//  上月数量
+            //     onHandInventory: item.stock.onHandInventory,//  现有库存
+            //     reportedQuantity: item.stock.reportedQuantity,//  现有库存
+            //     sort: null,//  排序
+            //     note: item.note,//  备注
+            //     STATUS: item.status,//  状态
+            //     isDelete: item.isDelete,//  是否删除
+            //     recordTime: null,//  录入时间
+            //     recordOn: null,//  录入人
+            //     modifyTime: null,//  修改时间
+            //     modifyOn: null,//  修改人
+            //     purchaseMethod: null,//  采购方式
+            //     prodLineMembers: item.stock.prodLineMembers,//  生产线人数
+            // }
             this.value.applicationProducts.push(item)
 
           })

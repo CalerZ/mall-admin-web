@@ -11,18 +11,20 @@
                   @selection-change="handleSelectionChange"
                   style="width: 100% ;line-height: 13px"
                   v-loading="listLoading"
+                  :cell-class-name="tableRowClassName"
+                  :header-cell-class-name="tableHeaderClassName"
                   :fit="true"
                   border>
           <el-table-column fixed type="selection" width="60" align="center"></el-table-column>
           <el-table-column fixed type="index" width="60" label="序号" align="center"></el-table-column>
           <el-table-column show-overflow-tooltip="true" fixed label="编号" width="200" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.productCode}}</span>
+              <span>{{scope.row.code}}</span>
             </template>
           </el-table-column>
           <el-table-column show-overflow-tooltip="true" fixed label="商品名称" width="150" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.productName}}</span>
+              <span>{{scope.row.name}}</span>
             </template>
           </el-table-column>
           <el-table-column fixed label="状态" width="150" align="center">
@@ -32,7 +34,7 @@
           </el-table-column>
           <el-table-column show-overflow-tooltip="true" label="类型" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.type1Name}} > {{scope.row.type2Name}}</span>
+              <span>{{scope.row.productType1.typeName}} > {{scope.row.productType2.typeName}}</span>
             </template>
           </el-table-column>
           <el-table-column show-overflow-tooltip="true" label="规格" align="center">
@@ -52,70 +54,55 @@
           </el-table-column>
           <el-table-column label="单位" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.unitName}}</span>
+              <span>{{scope.row.productUtil.utilName}}</span>
             </template>
           </el-table-column>
           <el-table-column label="安全库存" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.safetyStock}}</span>
+              <span>{{scope.row.stock.safetyStock}}</span>
             </template>
           </el-table-column>
           <el-table-column label="上月数量" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.lastMonthQuantity}}</span>
+              <span>{{scope.row.stock.lastMonthQuantity}}</span>
             </template>
           </el-table-column>
           <el-table-column label="现有库存" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.onHandInventory}}</span>
+              <span>{{scope.row.stock.onHandInventory}}</span>
             </template>
           </el-table-column>
           <el-table-column label="报告数量" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.reportedQuantity}}</span>
+              <span>{{scope.row.stock.reportedQuantity}}</span>
             </template>
           </el-table-column>
           <el-table-column label="生产线人数" width="120" align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.purchaseMethod}}</span>
+              <span>{{scope.row.stock.prodLineMembers}}</span>
             </template>
           </el-table-column>
           <el-table-column label="供应商" width="153" align="center">
-             <template slot-scope="scope">
-              <div class="input-box">
-                 <el-input size="small" v-model="scope.row.supplierId"></el-input>
-               </div>
+<!--              <div class="input-box">
+                 <el-input size="small" v-model="scope.row.purchaseMethod.id"></el-input>
+               </div>-->
                <template slot-scope="scope">
                  <el-select
                    v-model="scope.row.supplierId"
                    placeholder="请选择供应商">
                    <el-option
-                     v-for="item in 10"
-                     :key="item"
-                     :label="item"
-                     :value="item">
+                     v-for="item in scope.row.supplierList"
+                     :key="item.id"
+                     :label="item.name"
+                     :value="item.id">
                    </el-option>
                  </el-select>
                </template>
-             </template>
-            <template slot-scope="scope">
-              <el-select
-                v-model="scope.row.purchaseMethod"
-                placeholder="请选择采购方式">
-                <el-option
-                  v-for="item in supplierList"
-                  :key="item.id"
-                  :label="item.name"
-                  :value="item.id">
-                </el-option>
-              </el-select>
-            </template>
-
           </el-table-column>
           <el-table-column label="采购方式 " width="120" align="center">
             <template slot-scope="scope">
               <el-select
-                v-model="scope.row.purchaseMethod"
+                v-model="scope.row.purchaseMethod.id"
                 placeholder="请选择采购方式">
                 <el-option
                   v-for="item in purchaseMethodList"
@@ -229,7 +216,9 @@
         multipleSelection: [],
         applicationProducts: [],
         purchaseMethodList: [],
-        supplierList: [1,2,3]
+        supplierList: [1,2,3],
+        tableHeaderClassName:'el-table-header-customer',
+        tableRowClassName:'el-table-column-customer',
       }
     },
 
@@ -237,6 +226,12 @@
       //编辑时需要初始化list中的数据
       this.value.applicationProducts = [];
       this.getPurchaseMethodList();
+      if(isEdit){
+        this.value.applicationProducts = this.value.applicationProducts.map(item=>{
+          item.supplierId=null;
+          return item;
+        })
+      }
     },
 
     filters: {

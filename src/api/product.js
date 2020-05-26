@@ -64,7 +64,7 @@ export function updateRecommendStatus(params) {
 
 export function updatePublishStatus(params) {
   return request({
-    url:'/product/update/publishStatus',
+    url:'/product/updateStatus',
     method:'post',
     params:params
   })
@@ -78,7 +78,7 @@ export function createProduct(data) {
   })
 }
 
-export function updateProduct(id,data) {
+export function updateProduct(data) {
   return request({
     url:'/product/update',
     method:'put',

@@ -181,11 +181,9 @@
 <script>
   import {
     fetchList,
-    updateDeleteStatus,
-    updateNewStatus,
-    updateRecommendStatus,
     updatePublishStatus,
     deleteProducts,
+    updateProduct
   } from '@/api/product'
   import {fetchAllList as fetchTypeList} from '@/api/productType'
   import {fetchAllList as getAllMember} from '@/api/login';
@@ -210,16 +208,6 @@
     data() {
       than = this;
       return {
-        editSkuInfo: {
-          dialogVisible: false,
-          productId: null,
-          productSn: '',
-          productAttributeCategoryId: null,
-          stockList: [],
-          productAttr: [],
-          keyword: null
-        },
-
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
@@ -292,6 +280,18 @@
 
     },
     methods: {
+
+      handleStatusChange(index, row) {
+        debugger
+        updatePublishStatus({id:row.id,status:row.status}).then(response=>{
+          this.$message({
+            message: '修改成功',
+            type: 'success',
+            duration: 1000
+          });
+          this.getList();
+        });
+      },
       tableHeaderClassName({row, rowIndex}){
         return 'el-table-header-customer';
       },
@@ -398,61 +398,9 @@
 
         this.$router.push({path: '/pms/viewProduct', query: {id: row.id}});
       },
-      handleShowVerifyDetail(index, row) {
-        console.log("handleShowVerifyDetail", row);
-      },
-      handleShowLog(index, row) {
-        console.log("handleShowLog", row);
-      },
-      updatePublishStatus(ids) {
-        let params = new URLSearchParams();
-        params.append('ids', ids);
-        params.append('publishStatus', publishStatus);
-        updatePublishStatus(params).then(response => {
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        });
-      },
-      updateNewStatus(newStatus, ids) {
-        let params = new URLSearchParams();
-        params.append('ids', ids);
-        params.append('newStatus', newStatus);
-        updateNewStatus(params).then(response => {
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        });
-      },
-      updateRecommendStatus(recommendStatus, ids) {
-        let params = new URLSearchParams();
-        params.append('ids', ids);
-        params.append('recommendStatus', recommendStatus);
-        updateRecommendStatus(params).then(response => {
-          this.$message({
-            message: '修改成功',
-            type: 'success',
-            duration: 1000
-          });
-        });
-      },
-      updateDeleteStatus(deleteStatus, ids) {
-        let params = new URLSearchParams();
-        params.append('ids', ids);
-        params.append('deleteStatus', deleteStatus);
-        updateDeleteStatus(params).then(response => {
-          this.$message({
-            message: '删除成功',
-            type: 'success',
-            duration: 1000
-          });
-        });
-        this.getList();
-      }
+
+
+
     }
   }
 </script>
