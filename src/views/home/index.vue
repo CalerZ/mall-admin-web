@@ -142,7 +142,7 @@
     <el-calendar v-model="value">
     </el-calendar>
 
-    <div class="overview-layout">
+<!--    <div class="overview-layout">
       <el-row :gutter="20">
         <el-col :span="12">
           <div class="out-border">
@@ -249,7 +249,7 @@
           </div>
         </el-col>
       </el-row>
-    </div>
+    </div>-->
   </div>
 </template>
 

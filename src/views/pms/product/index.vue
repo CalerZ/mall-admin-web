@@ -170,7 +170,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10,20,50,100]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -208,6 +208,8 @@
     data() {
       than = this;
       return {
+        tableHeaderClassName:"el-table-header-customer",
+        tableRowClassName:"el-table-column-customer",
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
@@ -282,7 +284,7 @@
     methods: {
 
       handleStatusChange(index, row) {
-        debugger
+
         updatePublishStatus({id:row.id,status:row.status}).then(response=>{
           this.$message({
             message: '修改成功',
@@ -292,12 +294,7 @@
           this.getList();
         });
       },
-      tableHeaderClassName({row, rowIndex}){
-        return 'el-table-header-customer';
-      },
-      tableRowClassName({row, rowIndex}) {
-        return 'el-table-column-customer';
-      },
+
       getAllUser() {
         getAllMember().then(response => {
           this.userList = response.data;

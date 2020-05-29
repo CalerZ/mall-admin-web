@@ -148,8 +148,6 @@
                 duration: 1000
               });
               //初始化表单
-              debugger
-              console.log(this.$refs)
               this.$refs.productAttrDetail.resetForm("productInfoForm");
               this.$refs.productRelationDetail.resetForm("productRelationForm");
               this.$refs.productSaleDetail.resetForm("productSaleForm");
@@ -164,7 +162,7 @@
 </script>
 <style scoped>
   .form-container {
-    width: 800px;
+    width: 900px;
   }
   .el-tree{
     left:10%;

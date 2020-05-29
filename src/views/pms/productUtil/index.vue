@@ -23,6 +23,8 @@
                 :data="list"
                 v-loading="listLoading"
                 @selection-change="handleSelectionChange"
+                :cell-class-name="tableRowClassName"
+                :header-cell-class-name="tableHeaderClassName"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="编号" width="100" align="center">
@@ -61,7 +63,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10,20,50,100]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -81,9 +83,11 @@
         listLoading: true,
         listQuery: {
           pageNum: 1,
-          pageSize: 5,
+          pageSize: 10,
           keyword:null
         },
+        tableHeaderClassName:"el-table-header-customer",
+        tableRowClassName:"el-table-column-customer",
         dialogVisible: false,
         dialogTitle:'',
         productAttrCate:{

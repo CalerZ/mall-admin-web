@@ -4,20 +4,9 @@
              :rules="rules"
              ref="productRelationForm"
              label-width="120px"
-             style="width: 680px"
+             style="width: 800px"
              size="small">
-      <!--      <el-form-item label="供应商：" prop="brandId">-->
-      <!--        <el-select-->
-      <!--          v-model="value.product.supplierId"-->
-      <!--          placeholder="请选择供应商">-->
-      <!--          <el-option-->
-      <!--            v-for="item in brandOptions"-->
-      <!--            :key="item.value"-->
-      <!--            :label="item.label"-->
-      <!--            :value="item.value">-->
-      <!--          </el-option>-->
-      <!--        </el-select>-->
-      <!--      </el-form-item>-->
+
 
       <el-form-item label="采购方式：" prop="stock.purchaseMethod">
         <el-select
@@ -32,8 +21,6 @@
         </el-select>
       </el-form-item>
 
-      <!--          filterable-->
-      <!--          :filter-method="filterMethod"-->
 
       <el-form-item label="供应商：" prop="sublist">
         <el-transfer
@@ -68,8 +55,6 @@
       }
     },
     data() {
-
-
       return {
         purchaseMethodList: [],
         //所有专题列表
@@ -96,6 +81,10 @@
       };
     },
     created() {
+      if (this.isEdit) {
+        debugger
+        this.sublist = this.value.product.supplierId&&this.value.product.supplierId.split(",")
+      }
       this.getSupplierList();
       this.getPurchaseMethodList();
     },

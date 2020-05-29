@@ -72,6 +72,7 @@ export function getApplicationProductList(data) {
 
 
 export function getMyApplicationList(data) {
+
   return request({
     url:'/application/myApplicationList',
     method:'post',

@@ -15,7 +15,7 @@
         <div style="margin-top: 15px">
           <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
             <el-form-item label="输入搜索：">
-              <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="供应商名称/编码"></el-input>
+              <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="名称/编码"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -43,9 +43,11 @@
                 style="width: 100%"
                 @selection-change="handleSelectionChange"
                 v-loading="listLoading"
+                :cell-class-name="tableRowClassName"
+                :header-cell-class-name="tableHeaderClassName"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="编号" width="200" align="center">
+        <el-table-column label="编码" width="200" align="center">
           <template slot-scope="scope">{{scope.row.code}}</template>
         </el-table-column>
         <el-table-column label="供应商名称" align="center">
@@ -81,7 +83,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10,20,50,100]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -100,6 +102,8 @@
           pageNum: 1,
           pageSize: 10
         },
+        tableHeaderClassName:"el-table-header-customer",
+        tableRowClassName:"el-table-column-customer",
         list: null,
         total: null,
         listLoading: true,

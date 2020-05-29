@@ -66,6 +66,9 @@
                 :header-cell-class-name="tableHeaderClassName"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
+        <el-table-column label="序号" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.id}}</template>
+        </el-table-column>
         <el-table-column label="申请单单号" width="200" align="center">
           <template slot-scope="scope">{{scope.row.formCode}}</template>
         </el-table-column>
@@ -111,7 +114,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10,20,50,100]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -136,7 +139,7 @@
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
-    pageSize: 5,
+    pageSize: 10,
     publishStatus: null,
     verifyStatus: null,
     productSn: null,

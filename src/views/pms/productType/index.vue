@@ -21,9 +21,11 @@
                 style="width: 100%"
                 :data="list"
                 @selection-change="handleSelectionChange"
+                :cell-class-name="tableRowClassName"
+                :header-cell-class-name="tableHeaderClassName"
                 v-loading="listLoading" border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="编号" width="100" align="center">
+        <el-table-column label="序号" width="100" align="center">
           <template slot-scope="scope">{{scope.row.id}}</template>
         </el-table-column>
         <el-table-column label="分类名称" align="center">
@@ -55,10 +57,6 @@
               :disabled="scope.row.level | disableNextLevel"
               @click="handleShowNextLevel(scope.$index, scope.row)">查看下级
             </el-button>
-            <!--            <el-button-->
-            <!--              size="mini"-->
-            <!--              @click="handleTransferProduct(scope.$index, scope.row)">转移商品-->
-            <!--            </el-button>-->
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200" align="center">
@@ -79,7 +77,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10,20,50,100]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -94,12 +92,14 @@
     name: "productTypeList",
     data() {
       return {
+        tableHeaderClassName:"el-table-header-customer",
+        tableRowClassName:"el-table-column-customer",
         list: null,
         total: null,
         listLoading: true,
         listQuery: {
           pageNum: 1,
-          pageSize: 5
+          pageSize: 10
         },
         parentId: 0,
         multipleSelection: []

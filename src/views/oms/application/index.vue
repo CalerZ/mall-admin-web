@@ -20,7 +20,7 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
+          <el-form-item label="申请单编号：">
             <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="申请单编号"></el-input>
           </el-form-item>
           <el-form-item label="申请日期：">
@@ -37,7 +37,7 @@
             </div>
           </el-form-item>
           <el-form-item label="申请单状态：">
-            <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
+            <el-select v-model="listQuery.status" placeholder="全部" clearable>
               <el-option
                 v-for="item in verifyStatusOptions"
                 :key="item.value"
@@ -81,6 +81,9 @@
                 v-loading="listLoading"
                 border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
+        <el-table-column label="序号" width="100" align="center">
+          <template slot-scope="scope">{{scope.row.id}}</template>
+        </el-table-column>
         <el-table-column label="申请单单号" width="200" align="center">
           <template slot-scope="scope">{{scope.row.formCode}}</template>
         </el-table-column>
@@ -131,7 +134,7 @@
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
         :page-size="listQuery.pageSize"
-        :page-sizes="[5,10,15]"
+        :page-sizes="[10,20,50,100]"
         :current-page.sync="listQuery.pageNum"
         :total="total">
       </el-pagination>
@@ -150,31 +153,19 @@
   import {getMyApplicationList as fetchListApplicationForm,cancel,updateApplicationStatus,delApplications} from '@/api/application'
   import {fetchAllList as getAllMember} from "@/api/login";
   import {fetchListAll as getAllCompany} from "@/api/company";
+  import {dateFormat} from '@/utils/date';
   const defaultListQuery = {
     keyword: null,
     pageNum: 1,
-    pageSize: 5,
-    publishStatus: null,
-    verifyStatus: null,
-    productSn: null,
-    productCategoryId: null,
-    brandId: null,
-    date:null
+    pageSize: 10,
+    status: null,
+    date:[]
 
   };
   export default {
     name: "applicationFormList",
     data() {
       return {
-        editSkuInfo:{
-          dialogVisible:false,
-          productId:null,
-          productSn:'',
-          productAttributeCategoryId:null,
-          stockList:[],
-          productAttr:[],
-          keyword:null
-        },
 
         memberList:[],
         companyList:[],
@@ -190,12 +181,21 @@
         productCateOptions: [],
         brandOptions: [],
         verifyStatusOptions: [{
-          value: 1,
-          label: '已发布'
-        }, {
           value: 0,
-          label: '未发布'
-        }],
+          label: '未审核'
+        }, {
+          value: 1,
+          label: '审核中'
+        },
+          {
+            value: 2,
+            label: '审核通过'
+          },
+       {
+         value: 3,
+           label: '未审核(已撤销)'
+       }
+        ],
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -292,6 +292,7 @@
       },
       getList() {
         this.listLoading = true;
+        this.listQuery.date = this.listQuery.date.map(item=>item)
         fetchListApplicationForm(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.list;

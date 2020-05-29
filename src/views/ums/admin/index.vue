@@ -100,7 +100,7 @@
         layout="total, sizes,prev, pager, next,jumper"
         :current-page.sync="listQuery.pageNum"
         :page-size="listQuery.pageSize"
-        :page-sizes="[10,15,20]"
+        :page-sizes="[10,20,50,100]"
         :total="total">
       </el-pagination>
     </div>
@@ -284,7 +284,7 @@
         this.$router.push({path: '/ums/adduser'})
 
 
-        
+
        // this.dialogVisible = true;
         //this.isEdit = false;
         //this.admin = Object.assign({}, defaultAdmin);
@@ -382,7 +382,7 @@
       getList() {
         this.listLoading = true;
         fetchList(this.listQuery).then(response => {
-         
+
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;

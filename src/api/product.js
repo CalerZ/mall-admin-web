@@ -78,7 +78,7 @@ export function createProduct(data) {
   })
 }
 
-export function updateProduct(data) {
+export function updateProduct(id,data) {
   return request({
     url:'/product/update',
     method:'put',

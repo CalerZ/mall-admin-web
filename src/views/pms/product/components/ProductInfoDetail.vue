@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: 50px">
+  <div style="margin-top: 50px;margin-left: 80px">
     <el-tree
       :data="menuTreeList"
       default-expand-all
