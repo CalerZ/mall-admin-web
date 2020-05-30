@@ -180,10 +180,11 @@
         multipleSelection: [],
         productCateOptions: [],
         brandOptions: [],
-        verifyStatusOptions: [{
-          value: 0,
+        verifyStatusOptions: [  {
+          value: 3,
           label: '未审核'
-        }, {
+        },
+          {
           value: 1,
           label: '审核中'
         },
@@ -191,10 +192,7 @@
             value: 2,
             label: '审核通过'
           },
-       {
-         value: 3,
-           label: '未审核(已撤销)'
-       }
+
         ],
         pickerOptions: {
           shortcuts: [{
@@ -292,8 +290,19 @@
       },
       getList() {
         this.listLoading = true;
-        this.listQuery.date = this.listQuery.date.map(item=>item)
-        fetchListApplicationForm(this.listQuery).then(response => {
+        let searchData = {
+          keyword: this.listQuery.keyword,
+          pageNum: this.listQuery.pageNum,
+          pageSize: this.listQuery.pageSize,
+          status: this.listQuery.status,
+          date1:"",
+          date2:"",
+        };
+        if(this.listQuery.date&&this.listQuery.date.length>0){
+          searchData.date1=dateFormat(this.listQuery.date[0],"yyyy-MM-dd")
+          searchData.date2=dateFormat(this.listQuery.date[1],"yyyy-MM-dd")
+        }
+        fetchListApplicationForm(searchData).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;

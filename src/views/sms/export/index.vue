@@ -59,7 +59,7 @@
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>数据列表</span>
+      <span>导出数据预览</span>
       <el-button
         class="btn-add"
         @click="exportData()"
@@ -165,6 +165,7 @@
   import {selectExcelData} from '@/api/application'
   import {exportList} from '@/api/info'
   import {fetchaAllList as getAllSupplier} from '@/api/supplier';
+  import {dateFormat} from '@/utils/date';
 
   let than;
   const defaultListQuery = {
@@ -187,20 +188,11 @@
       than = this;
       return {
 
-        editSkuInfo: {
-          dialogVisible: false,
-          productId: null,
-          productSn: '',
-          productAttributeCategoryId: null,
-          stockList: [],
-          productAttr: [],
-          keyword: null
-        },
         operateType: null,
         listQuery: Object.assign({}, defaultListQuery),
         list: null,
         total: null,
-        listLoading: true,
+        listLoading: false,
         selectProductCateValue: null,
         multipleSelection: [],
         productCateOptions: [],
@@ -257,7 +249,7 @@
       }
     },
     created() {
-      this.getList();
+     // this.getList();
       this.getAllSupplierList();
     },
     filters: {
@@ -307,12 +299,53 @@
         })
       },
       exportData() {
-        exportList(this.listQuery).then(result => {
+        let searchData = {
+          keyword: this.listQuery.keyword,
+          pageNum: this.listQuery.pageNum,
+          pageSize: this.listQuery.pageSize,
+          date1: null,
+          date2: null,
+          quarter: this.listQuery.quarter,
+          year: this.listQuery.year
+        };
+        if (this.listQuery.date && this.listQuery.date.length > 0) {
+          searchData.date1 = dateFormat(this.listQuery.date[0], "yyyy-MM-dd")
+          searchData.date2 = dateFormat(this.listQuery.date[1], "yyyy-MM-dd")
+        }
+
+        let current = dateFormat(new Date(), "yyyy-MM-dd");
+        exportList(searchData).then(result => {
           const data = new Blob([result], {type: 'application/vnd.ms-excel'})
           const url = URL.createObjectURL(data)
           const a = document.createElement('a')
           a.href = url
-          a.download = "xxx月或者2020季度"
+          let fileName = "物资申请汇总表.xlsx";
+          if (searchData.date1 != null && searchData.date1 != '') {//按月查询，那么文件名为1月，2月...等  5-9月
+            if (searchData.date1 == searchData.date2) {
+              fileName = searchData.date1+ "物资申请汇总表";
+            } else {
+              fileName = searchData.date1 + "-" + searchData.date2 + "物资申请汇总表";
+            }
+          } else if (searchData.quarter != null && searchData.quarter != '') {//按季度查询，那么文件名为  第xx季度物资申请汇总表
+
+            if (searchData.quarter == "1") {
+              fileName = current.substring(0, 4) + "年第一季度物资申请汇总表"
+            } else if (searchData.quarter == "2") {
+              fileName = current.substring(0, 4) + "年第二季度物资申请汇总表"
+            }else if (searchData.quarter == "3") {
+              fileName = current.substring(0, 4) + "年第三季度物资申请汇总表"
+            }else if (searchData.quarter == "4") {
+              fileName = current.substring(0, 4) + "年第四季度物资申请汇总表"
+            }
+
+          } else if (searchData.year != null && searchData.year != '') {
+            if (searchData.year == "1") {
+              fileName = current.substring(0, 4) + "年上半年物资申请汇总表"
+            } else if (searchData.year == "2") {
+              fileName = current.substring(0, 4) + "年下半年物资申请汇总表"
+            }
+          }
+          a.download = fileName
           a.click()
           URL.revokeObjectURL(url)
 
@@ -321,10 +354,29 @@
       },
       getList() {
         this.listLoading = true;
-        // this.listQuery.date = this.listQuery.date.map(item=>item.getFullYear()+"-"+(item.getMonth()+1)+"-" +item.getDate())
-        // this.listQuery.date = this.listQuery.date.forEach(item=>item)
-        console.log(this.listQuery)
-        selectExcelData(this.listQuery).then(response => {
+        let searchData = {
+          keyword: this.listQuery.keyword,
+          pageNum: this.listQuery.pageNum,
+          pageSize: this.listQuery.pageSize,
+          date1: null,
+          date2: null,
+          quarter: this.listQuery.quarter,
+          year: this.listQuery.year
+        };
+        if (this.listQuery.date && this.listQuery.date.length > 0) {
+          searchData.date1 = dateFormat(this.listQuery.date[0], "yyyy-MM-dd")
+          searchData.date2 = dateFormat(this.listQuery.date[1], "yyyy-MM-dd")
+        }
+        if(searchData.date1==null&&searchData.quarter==null&&searchData.year==null){
+          this.$message({
+            message: '请选择查询条件！',
+            type: 'warning',
+            duration: 1000
+          });
+          this.listLoading = false;
+          return
+        }
+        selectExcelData(searchData).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;

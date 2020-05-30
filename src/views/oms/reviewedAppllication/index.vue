@@ -20,28 +20,31 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
-            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="物料名称/物料编号"></el-input>
-          </el-form-item>
-          <el-form-item label="物料类型：">
-            <el-select v-model="listQuery.typeId" placeholder="请选择物料类型" clearable>
-              <el-option
-                v-for="item in brandOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+          <el-form-item label="申请单单号：">
+            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="申请单单号"></el-input>
           </el-form-item>
           <el-form-item label="创建人：">
-            <el-select v-model="listQuery.verifyStatus" placeholder="全部" clearable>
+            <el-select v-model="listQuery.applyUser" placeholder="全部" clearable>
               <el-option
-                v-for="item in verifyStatusOptions"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="item in userList"
+                :key="item.id"
+                :label="item.nickname"
+                :value="item.id">
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="申请日期：">
+            <div class="block">
+              <el-date-picker
+                v-model="listQuery.date"
+                type="daterange"
+                :picker-options="pickerOptions"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                align="right">
+              </el-date-picker>
+            </div>
           </el-form-item>
         </el-form>
       </div>
@@ -129,10 +132,9 @@
     updateRecommendStatus,
     updatePublishStatus
   } from '@/api/product'
-  import {fetchList as fetchSkuStockList,update as updateSkuStockList} from '@/api/skuStock'
-  import {fetchList as fetchProductAttrList} from '@/api/productAttr'
-  import {fetchList as fetchBrandList} from '@/api/brand'
-  import {fetchListWithChildren} from '@/api/productType'
+
+  import {dateFormat} from '@/utils/date';
+  import {fetchAllList as getAllTypeList} from '@/api/productType'
   import {getReviewedApplicationList as fetchListApplicationForm} from '@/api/application'
   import {fetchAllList as getAllMember} from "@/api/login";
   import {fetchListAll as getAllCompany} from "@/api/company";
@@ -140,11 +142,8 @@
     keyword: null,
     pageNum: 1,
     pageSize: 10,
-    publishStatus: null,
-    verifyStatus: null,
-    productSn: null,
-    productCategoryId: null,
-    brandId: null
+    date:[],
+    applyUser:null,
   };
   export default {
     name: "reviewedApplicationFormList",
@@ -164,27 +163,39 @@
         productCateOptions: [],
         brandOptions: [],
 
-        verifyStatusOptions: [{
-          value: 1,
-          label: '已发布'
-        }, {
-          value: 0,
-          label: '未发布'
-        }]
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+        userList:[]
       }
     },
     created() {
       this.getList();
-    },
-    watch: {
-      selectProductCateValue: function (newValue) {
-        if (newValue != null && newValue.length == 2) {
-          this.listQuery.productCategoryId = newValue[1];
-        } else {
-          this.listQuery.productCategoryId = null;
-        }
-
-      }
+      this.getUserList();
     },
     filters: {
       verifyStatusFilter(value) {
@@ -195,10 +206,14 @@
             return '审核中'
           case 2:
             return '审核通过'
+          case 3:
+            return '未审核(已撤销)'
         }
       }
     },
     methods: {
+
+
       handleFinishLog(){
         this.$router.push({path:'/apply/finishApplicationFormList'});
       },
@@ -207,14 +222,28 @@
           response.data.forEach(item=>{this.companyList[item.id]=item.name})
         })
       },
-      getMember() {
+      getUserList() {
         getAllMember().then(response => {
-          response.data.forEach(item=>{this.memberList[item.id]=item.username})
+        //  response.data.forEach(item=>{this.memberList[item.id]=item.username})
+          this.userList = response.data;
         })
       },
       getList() {
         this.listLoading = true;
-        fetchListApplicationForm(this.listQuery).then(response => {
+
+        let searchData = {
+          keyword: this.listQuery.keyword,
+          pageNum: this.listQuery.pageNum,
+          pageSize: this.listQuery.pageSize,
+          applyUser:this.listQuery.applyUser,
+          date1:"",
+          date2:"",
+        };
+        if(this.listQuery.date&&this.listQuery.date.length>0){
+          searchData.date1=dateFormat(this.listQuery.date[0],"yyyy-MM-dd")
+          searchData.date2=dateFormat(this.listQuery.date[1],"yyyy-MM-dd")
+        }
+        fetchListApplicationForm(searchData).then(response => {
           this.listLoading = false;
           this.list = response.data.list;
           this.total = response.data.total;

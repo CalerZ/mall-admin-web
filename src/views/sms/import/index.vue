@@ -24,7 +24,7 @@
               :on-success="handleSuccess"
               accept=".xlsx,.xls"
             >
-              <el-button size="small" plain>点击上传</el-button>
+              <el-button size="small" plain>上传文件</el-button>
               <div slot="tip" class="el-upload__tip">只能上传excel文件</div>
             </el-upload>
           </div>
@@ -236,11 +236,9 @@
       },
       exportData() {
         // let ids = this.multipleSelection.map(item => item.id);
-        debugger
-        exportList(this.listQuery).then(result => {
+        exportList().then(result => {
           // console.log(result)
 
-          // debugger
           const data = new Blob([result], {type: 'application/vnd.ms-excel'})
           const url = URL.createObjectURL(data)
           const a = document.createElement('a')
@@ -254,9 +252,6 @@
       },
       getList() {
         this.listLoading = true;
-        // this.listQuery.date = this.listQuery.date.map(item=>item.getFullYear()+"-"+(item.getMonth()+1)+"-" +item.getDate())
-        // this.listQuery.date = this.listQuery.date.forEach(item=>item)
-        console.log(this.listQuery)
         selectExcelData(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.list;

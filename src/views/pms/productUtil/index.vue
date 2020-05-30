@@ -3,6 +3,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets" style="margin-top: 5px"></i>
       <span style="margin-top: 5px">数据列表</span>
+
       <el-button
         class="btn-add"
         type="danger"
@@ -72,7 +73,7 @@
   </div>
 </template>
 <script>
-  import {fetchList, createUtil, updateUtilStatus, deleteUtil,deleteUtils,getUtil,updateUtil,fetchaAllList} from '@/api/util'
+  import {fetchList, createUtil, updateUtilStatus, deleteUtil,deleteUtils,getUtil,updateUtil,fetchaAllList,updateStatus,sealed} from '@/api/util'
 
   export default {
     name: 'productUtilList',
@@ -99,13 +100,41 @@
           name: [
             { required: true, message: '请输入类型名称', trigger: 'blur' }
           ]
-        }
+        },
+
       }
     },
     created() {
       this.getList();
     },
     methods: {
+      //封存
+      handleSealed() {
+
+        if(this.multipleSelection.length<1){
+          this.$message({
+            message: '未选择单位！',
+            type: 'warning',
+            duration: 1000
+          });
+          return;
+        }
+        this.$confirm('是否要封存该单位', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let ids = this.multipleSelection.map(supplier=>supplier.id);
+          sealed(ids).then(response=>{
+            this.$message({
+              message: '封存成功',
+              type: 'success',
+              duration:1000
+            });
+            this.getList();
+          });
+        });
+      },
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },

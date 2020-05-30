@@ -82,7 +82,6 @@
     },
     created() {
       if (this.isEdit) {
-        debugger
         this.sublist = this.value.product.supplierId&&this.value.product.supplierId.split(",")
       }
       this.getSupplierList();

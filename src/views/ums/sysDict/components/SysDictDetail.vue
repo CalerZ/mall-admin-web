@@ -100,15 +100,12 @@
       onSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            debugger
             this.$confirm('是否提交数据', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
               if (this.isEdit) {
-                debugger
-                console.log(this.sysDict)
                 update(this.sysDict).then(response => {
                   this.$refs[formName].resetFields();
                   this.$message({

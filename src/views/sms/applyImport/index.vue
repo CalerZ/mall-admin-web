@@ -215,11 +215,9 @@
       },
       exportData() {
         // let ids = this.multipleSelection.map(item => item.id);
-        debugger
         exportList(this.listQuery).then(result => {
           // console.log(result)
 
-          // debugger
           const data = new Blob([result], {type: 'application/vnd.ms-excel'})
           const url = URL.createObjectURL(data)
           const a = document.createElement('a')
